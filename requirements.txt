@@ -1,6 +1,9 @@
-Django>=4.2,<5.1
-django-crispy-forms>=2.1
-crispy-bootstrap5>=2024.2
-Pillow>=10.0
-djangorestframework>=3.15
-djangorestframework-simplejwt>=5.3
+Django
+django-crispy-forms
+crispy-bootstrap5
+Pillow
+djangorestframework
+djangorestframework-simplejwt
+python-dotenv
+requests
+django-jazzmin

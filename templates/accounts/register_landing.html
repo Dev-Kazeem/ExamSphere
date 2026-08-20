@@ -2,7 +2,7 @@
 {% block title %}Sign Up{% endblock %}
 {% block content %}
 
-
+<div class="container">
 <div class="row justify-content-center space-top">
     <div class="col-md-8">
         <h3 class="text-center mb-4 text-info">How would you like to join?</h3>
@@ -28,7 +28,8 @@
                 </div>
             </div>
         </div>
-        <p class="text-center mt-4 text-info">Already have an account? <a href="{% url 'accounts:login' %}">Login</a> Here</p>
+        <p class="text-center mt-4 text-info">Already have an account? <a class="anchor" href="{% url 'accounts:login' %}">Login</a></p>
     </div>
+</div>
 </div>
 {% endblock %}

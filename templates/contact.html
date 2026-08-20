@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Contact{% endblock %}
+{% load crispy_forms_tags %}
+{% block title %}Contact Us{% endblock %}
 
 
 {% block content %}
@@ -10,7 +11,7 @@
         <h1 class="display-4 fw-bold text-light">Contact Us</h1>
         <p class="lead text-light">
             We'd love to hear from you. Send us your questions, feedback or suggestions.
-            <p class="text-light">always active  <a href="https://wa.me/2348114598006" class="text-success lead" target="_blank"><i class="bi bi-whatsapp"></i>n</a> whatsapp</p>
+            <p class="text-light">Reach out   <a style="text-decoration: none; color: #25D366;" href="https://wa.me/2348114598006" class="lead" target="_blank"><i class="bi bi-whatsapp"></i>n</a> Whatsapp</p>
         </p>
     </div>
 </section>
@@ -28,7 +29,7 @@
                     </div>
                     <h5>Address</h5>
                     <p class="text-muted">
-                        No. 15 EduRing Street<br>
+                        No. 15 ExamSphere Street<br>
                         Sokoto, Nigeria
                     </p>
                 </div>
@@ -42,7 +43,7 @@
                     <h5>Email</h5>
                     <p class="text-muted">
                         shehukasimu4@gmail.com<br>
-                        support@example.com
+                        support@ExamSphere.com
                     </p>
                 </div>
             </div>
@@ -74,49 +75,17 @@
             <div class="col-lg-7">
 
                 <div class="form-section p-4">
-
-                    <h3 class="mb-4">Send Us a Message</h3>
-
-                    <form>
-
-                        <div class="row">
-
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">First Name</label>
-                                <input type="text" class="form-control">
+                        <div class="card shadow-sm">
+                            <div class="card-body p-4">
+                            <h3 class="mb-4">Send Us a Message</h3>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form|crispy }}
+                                    <button class="btn btn-primary btn-lg"><i class="bi bi-send"></i>Send Message</button>
+                                </form>
                             </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Last Name</label>
-                                <input type="text" class="form-control">
-                            </div>
-
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Email Address</label>
-                            <input type="email" class="form-control">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Subject</label>
-                            <input type="text" class="form-control">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Message</label>
-                            <textarea rows="6" class="form-control"></textarea>
-                        </div>
-
-                        <button class="btn btn-primary btn-lg">
-                            <i class="bi bi-send"></i>
-                            Send Message
-                        </button>
-
-                    </form>
-
-                </div>
-
+                    </div>
             </div>
 
             <div class="col-lg-5">
@@ -136,5 +105,4 @@
 
     </div>
 </section>
-
 {% endblock content %}

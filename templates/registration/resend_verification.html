@@ -3,7 +3,7 @@
 {% block title %}Resend Verification Email{% endblock %}
 {% block content %}
 
-<div class="row justify-content-center">
+<div class="row justify-content-center space-top">
     <div class="col-md-5">
         <div class="card shadow-sm">
             <div class="card-body p-4">
@@ -15,7 +15,7 @@
                     <button type="submit" class="btn btn-primary w-100 mt-2">Send Link</button>
                 </form>
                 <p class="text-center mt-3 mb-0">
-                    <a href="{% url 'accounts:login' %}">Back to login</a>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary mt-2">Back to login</a>
                 </p>
             </div>
         </div>

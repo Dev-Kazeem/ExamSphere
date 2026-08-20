@@ -7,6 +7,24 @@ from django.utils import timezone
 
 
 class Exam(models.Model):
+
+    """ for payment  """
+    ...
+    semester = models.ForeignKey(
+        'payments.Semester', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='exams', help_text="Leave blank for a free exam."
+    )
+
+    def can_be_attempted_by(self, student):
+        if not self.is_available_for_students():
+            return False
+        if self.semester_id and not self.semester.subscriptions.filter(
+            student=student, status='PAID'
+        ).exists():
+            return False
+        return self.attempts_used_by(student) < self.max_attempts
+
+
     """A multiple-choice exam created by a Teacher."""
 
     teacher = models.ForeignKey(

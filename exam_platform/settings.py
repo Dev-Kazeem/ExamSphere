@@ -7,6 +7,10 @@ Two user roles: Student and Teacher.
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -15,19 +19,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # -----------------------------------------------------------------------
 # In production, set this via an environment variable and NEVER commit
 # a real secret key to version control.
-SECRET_KEY = os.environ.get(
-    'DJANGO_SECRET_KEY',
-    'django-insecure-CHANGE-THIS-KEY-BEFORE-DEPLOYING-TO-PRODUCTION'
-)
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
 
 # -----------------------------------------------------------------------
 # APPLICATION DEFINITION
 # -----------------------------------------------------------------------
 INSTALLED_APPS = [
+     'jazzmin',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,10 +42,12 @@ INSTALLED_APPS = [
     # Third-party
     'crispy_forms',
     'crispy_bootstrap5',
+   
 
     # Local apps
     'accounts',
     'exams',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -155,4 +160,76 @@ MESSAGE_TAGS = {
     messages_constants.SUCCESS: 'success',
     messages_constants.WARNING: 'warning',
     messages_constants.ERROR: 'danger',
+}
+
+
+# -------------------------------------------------------------------------
+# EMAIL SERVICES
+# -------------------------------------------------------------------------
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.sendgrid.net')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_TIMEOUT = int(os.environ.get('EMAIL_TIMEOUT', '10'))  # seconds — don't hang forever if the provider is down
+
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@yourdomain.com')
+SERVER_EMAIL = os.environ.get('DJANGO_SERVER_EMAIL', DEFAULT_FROM_EMAIL)  # for Django's internal error emails
+
+CONTACT_RECIPIENT_EMAIL = os.environ.get('CONTACT_RECIPIENT_EMAIL', DEFAULT_FROM_EMAIL)
+
+# So Django emails you (ADMINS) when a 500 error happens in production
+ADMINS = [tuple(pair.split(':')) for pair in os.environ.get('ADMINS', '').split(',') if ':' in pair]
+
+
+# ----------------------------------------------------------------
+# FLUTTER WAVE CONFIGURATION
+# ----------------------------------------------------------------
+FLUTTERWAVE_PUBLIC_KEY = os.environ.get('FLUTTERWAVE_PUBLIC_KEY', '')
+FLUTTERWAVE_SECRET_KEY = os.environ.get('FLUTTERWAVE_SECRET_KEY', '')
+FLUTTERWAVE_WEBHOOK_SECRET = os.environ.get('FLUTTERWAVE_WEBHOOK_SECRET', '')
+
+
+#------------------------------------------------------------------
+# CUSTOMIZING DJANGO ADMIN PANEL USING JAZZMIN
+#------------------------------------------------------------------
+JAZZMIN_SETTINGS = {
+    "site_title": "ExamSphere |Admin",
+    "site_header": "ExamSphere",
+    "site_brand": "ExamSphere",
+    "welcome_sign": "Welcome to ExamSphere Administration",
+
+    "custom_css": "css/admin-custom.css",
+    "show_sidebar": True,
+    "navigation_expanded": True,
+
+    "icons": {
+        "students.Student": "fas fa-user-graduate",
+        "exams.Exam": "fas fa-file-alt",
+        "exams.Question": "fas fa-question-circle",
+        "exams.Result": "fas fa-chart-bar",
+        "auth.User": "fas fa-user",
+        "auth.Group": "fas fa-users",
+    },
+
+
+    "topmenu_links": [
+        {
+            "name": "Home",
+            "url": "home",
+            "permissions": ["auth.view_user"],
+            "icon": "fas fa-home",
+        },
+
+        {
+            "name": "My Dashboard",
+            "url": "accounts:dashboard",
+            "icon": "fas fa-tachometer-alt",
+        },
+    ],
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "sidebar": "sidebar-dark-primary",
 }
