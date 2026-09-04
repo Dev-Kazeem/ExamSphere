@@ -9,7 +9,7 @@ class ExamForm(forms.ModelForm):
         model = Exam
         fields = [
             'title', 'description', 'subject', 'duration_minutes',
-            'start_time', 'end_time', 'pass_percentage', 'max_attempts',
+            'start_time', 'end_time', 'pass_percentage', 'semester','max_attempts',
             'shuffle_questions', 'is_published',
         ]
         widgets = {

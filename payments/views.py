@@ -10,6 +10,7 @@ from exams.permissions import student_required
 from .models import Semester, SemesterSubscription
 
 
+
 @student_required
 def initiate_payment(request, semester_id):
     semester = get_object_or_404(Semester, id=semester_id, is_active=True)
@@ -94,3 +95,17 @@ def flutterwave_webhook(request):
         sub.paid_at = timezone.now()
         sub.save()
     return JsonResponse({"status": "ok"})
+
+
+@student_required
+def checkout(request):
+    semesters = Semester.objects.filter(is_active=True)
+    my_subscriptions = SemesterSubscription.objects.filter(
+        student=request.user, status='PAID'
+    ).select_related('semester')
+    paid_semester_ids = set(my_subscriptions.values_list('semester_id', flat=True))
+    return render(request, 'payments/checkout.html', {
+        'semesters': semesters,
+        'my_subscriptions': my_subscriptions,
+        'paid_semester_ids': paid_semester_ids,
+    })

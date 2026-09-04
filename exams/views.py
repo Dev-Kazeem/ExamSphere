@@ -185,7 +185,7 @@ def student_dashboard(request):
             'can_attempt': used < exam.max_attempts,
         })
 
-    recent_results = my_attempts.exclude(status=ExamAttempt.Status.IN_PROGRESS)[:5]
+    recent_results = my_attempts.exclude(status=ExamAttempt.Status.IN_PROGRESS)[:3]
 
     return render(request, 'exams/student_dashboard.html', {
         'exam_status': exam_status,
@@ -199,8 +199,8 @@ def exam_start(request, exam_id):
     exam = get_object_or_404(Exam, id=exam_id, is_published=True)
 
     if not exam.can_be_attempted_by(request.user):
-        messages.error(request, "This exam isn't currently available to you (closed, not yet open, or no attempts left).")
-        return redirect('exams:student_dashboard')
+        messages.error(request, "Subscribe to have access to the exam.")
+        return redirect('payments:checkout')
 
     # Resume an in-progress attempt if one already exists and hasn't expired.
     in_progress = ExamAttempt.objects.filter(

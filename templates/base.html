@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
     {% block extra_head %}{% endblock %}
@@ -495,6 +496,7 @@
                         <li class="nav-item"><a class="nav-link text-light" href="{% url 'contact' %}">Contact Us</a></li>
                         <li class="nav-item"><a class="nav-link text-light" href="{% url 'exams:student_dashboard' %}">Available Exams</a></li>
                         <li class="nav-item"><a class="nav-link text-light" href="{% url 'exams:my_results' %}">My Results</a></li>
+                        <li class="nav-item"><a class="nav-link text-light" href="{% url 'payments:checkout' %}">Make Payment </a></li>
                     {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
@@ -557,7 +559,7 @@
 
     <div class="row g-4">
 
-      <div class="col-12 col-md-4">
+      <div class="bottom-up col-12 col-md-4">
      <div class="card shadow" style="background: rgb(30, 41, 59);">
       <img class="card-img-top img" loading="lazy"  src="https://images.pexels.com/photos/8197499/pexels-photo-8197499.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Happy young woman in graduation gown holding her certificate.">
 
@@ -568,12 +570,12 @@
      </div>
      </div>  
 
-    <div class="col-12 col-md-4">
+    <div class="bottom-up col-12 col-md-4">
      <div class="card shadow" style="background: rgb(30, 41, 59);">
       <img class="card-img-top img" loading="lazy" src="https://images.pexels.com/photos/8284020/pexels-photo-8284020.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Happy young woman in graduation gown holding her certificate.">
 
       <div class="card-body">
-       <h3 class="card-title font-bold mb-2" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 19px;">Instant Certificates</h3>
+       <h3 class="card-title font-bold mb-2" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 19px; text-decoration: line-through;">Instant Certificates</h3>
        <p class="card-text text-sm" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Earn digital certificates upon passing. Share achievements with employers and institutions.</p>
       </div>
      </div>
@@ -581,7 +583,7 @@
 
     
      
-    <div class="col-12 col-md-4">
+    <div class="bottom-up col-12 col-md-4">
      <div class="card shadow-lg" style="background: rgb(30, 41, 59);">
       <img class="card-img-top img" loading="lazy" src="https://images.pexels.com/photos/106344/pexels-photo-106344.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Tablet displaying analytics charts on a desk.">
 
@@ -610,7 +612,7 @@
       </div>
     </div>
 
-    <div class="row g-4">
+    <div class="row g-4 bottom-up">
       <div class="col-md-4">
         <div class="testi-card">
           <div class="quote-mark">&ldquo;</div>
@@ -625,7 +627,7 @@
         </div>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-4 bottom-up">
         <div class="testi-card">
           <div class="quote-mark">&ldquo;</div>
           <p class="mb-4">ExamSphere made exam prep so much less stressful. The practice tests felt just like the real thing, and I could track my weak areas easily. I went from panicking about my finals to actually feeling ready.</p>
@@ -639,7 +641,7 @@
         </div>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-4 bottom-up">
         <div class="testi-card">
           <div class="quote-mark">&ldquo;</div>
           <p class="mb-4">What I love about ExamSphere is the instant feedback. I don't have to wait days to know what I got wrong — I can fix my mistakes right away and move on to the next topic.</p>
@@ -741,7 +743,7 @@
     <div class="section-label mb-2">Course reviews</div>
     <h2 class="display-serif fw-semibold mb-5" style="font-size:2.25rem;">A running ledger of student feedback</h2>
 
-    <div class="ledger-row row g-4 align-items-center">
+    <div class="ledger-row row g-4 align-items-center right-left">
       <div class="col-md-2">
         <img src="https://i.pravatar.cc/400?img=16" class="ledger-photo" alt="Sofia Musa">
       </div>
@@ -758,7 +760,7 @@
       </div>
     </div>
 
-    <div class="ledger-row row g-4 align-items-center">
+    <div class="ledger-row row g-4 align-items-center left-right">
       <div class="col-md-2">
         <img src="https://i.pravatar.cc/400?img=51" class="ledger-photo" alt="Ibrahim Yusuf">
       </div>
@@ -775,7 +777,7 @@
       </div>
     </div>
 
-    <div class="ledger-row row g-4 align-items-center">
+    <div class="ledger-row row g-4 align-items-center right-left">
       <div class="col-md-2">
         <img src="https://plus.unsplash.com/premium_photo-1681493913693-5f2260905f34?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8YmxhY2slMjBzdHVkZW50JTIwcHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D" loading="lazy" class="ledger-photo" alt="Hauwa Khalid">
       </div>
@@ -793,11 +795,11 @@
     </div>
   </div>
 </section>
-
+  <a href="#top" class="btn btn-primary rounded-pill ms-5 mt-3"><i class="bi bi-arrow-up fs-4 fw-bold"></i></a>
 </main>
     {% endblock %}
 </div>
- <footer class="w-full border-top border-dark py-3 space-top" style="background: rgb(15, 23, 41);">
+ <footer class="w-full border-top border-dark py-3 space-top" style="background: #0f1729;">
     <div class="container text-center">
           <h4>Let's Connect</h4>
         <div class="social my-3">
@@ -826,12 +828,40 @@
                 icon: '{% if message.tags == "success" %}success{% elif message.tags == "error" %}error{% elif message.tags == "warning" %}warning{% else %}info{% endif %}',
                 title: '{{ message }}',
                 timer: 3000,
-                showConfirmButton: false
+                showConfirmButton: true
             });
         </script>
     {% endfor %}
 {% endif %}
- 
+
+  <script>
+
+      window.sr = ScrollReveal();
+      sr.reveal('.top-down',{
+        duration: 2000,
+        origin:'top',
+        distance: '300px'
+      }); 
+
+      sr.reveal('.bottom-up',{
+        duration: 2000,
+        origin:'bottom',
+        distance: '100px',
+      }); 
+
+      sr.reveal('.right-left',{
+        duration: 2000,
+        origin: 'right',
+        distance: '250px'
+      }) 
+
+      sr.reveal('.left-right',{
+        duration: 2000,
+        origin: 'left',
+        distance: '250px'
+      }) 
+    
+    </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 {% block extra_scripts %}{% endblock %}

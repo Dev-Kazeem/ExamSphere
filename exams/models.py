@@ -4,27 +4,9 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
-
+from payments.models import Semester
 
 class Exam(models.Model):
-
-    """ for payment  """
-    ...
-    semester = models.ForeignKey(
-        'payments.Semester', on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='exams', help_text="Leave blank for a free exam."
-    )
-
-    def can_be_attempted_by(self, student):
-        if not self.is_available_for_students():
-            return False
-        if self.semester_id and not self.semester.subscriptions.filter(
-            student=student, status='PAID'
-        ).exists():
-            return False
-        return self.attempts_used_by(student) < self.max_attempts
-
-
     """A multiple-choice exam created by a Teacher."""
 
     teacher = models.ForeignKey(
@@ -48,6 +30,10 @@ class Exam(models.Model):
         help_text="Minimum percentage required to pass."
     )
     max_attempts = models.PositiveIntegerField(default=1)
+    semester = models.ForeignKey(
+        Semester, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='exams', help_text="Leave blank for a free exam."
+    )
     shuffle_questions = models.BooleanField(default=True)
     is_published = models.BooleanField(default=False)
 
@@ -84,6 +70,15 @@ class Exam(models.Model):
 
     def can_be_attempted_by(self, student):
         if not self.is_available_for_students():
+            return False
+        return self.attempts_used_by(student) < self.max_attempts
+    
+    def can_be_attempted_by(self, student):
+        if not self.is_available_for_students():
+            return False
+        if self.semester_id and not self.semester.subscriptions.filter(
+            student=student, status='PAID'
+        ).exists():
             return False
         return self.attempts_used_by(student) < self.max_attempts
 

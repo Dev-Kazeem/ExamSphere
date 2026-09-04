@@ -23,8 +23,16 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+#ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "striking-corned-rebuttal.ngrok-free.dev",
+]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://striking-corned-rebuttal.ngrok-free.dev",
+]
 # -----------------------------------------------------------------------
 # APPLICATION DEFINITION
 # -----------------------------------------------------------------------
