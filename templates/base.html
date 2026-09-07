@@ -475,6 +475,44 @@
     }
 
 
+    /* 2. BUTTON STYLING */
+#backToTop {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: rgb(99, 202, 255);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  
+  /* 3. THIS MAKES IT OSCILLATE UP/DOWN FOREVER */
+  animation: oscillate 2s ease-in-out infinite;
+  
+  /* hide it at first */
+  display: none; 
+  z-index: 999;
+}
+
+/* 4. THE OSCILLATION ANIMATION */
+@keyframes oscillate {
+ 0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-10px); } /* move up 10px */
+  100% { transform: translateY(0px); }   /* back down */
+}
+
+/* 5. HOVER EFFECT - stops oscillating and lifts more */
+#backToTop:hover {
+  animation: none; /* stop the bobbing */
+  transform: translateY(-5px);
+  background: #444;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
 </style>
 </head>
 <body class="w-100" style="background: rgb(15, 23, 41); padding-top: 40px;">
@@ -795,7 +833,7 @@
     </div>
   </div>
 </section>
-  <a href="#top" class="btn btn-primary rounded-pill ms-5 mt-3"><i class="bi bi-arrow-up fs-4 fw-bold"></i></a>
+  <button id="backToTop" title="Go to top"><i class="bi bi-arrow-up fs-4 fw-bold"></i></button>
 </main>
     {% endblock %}
 </div>
@@ -862,6 +900,22 @@
       }) 
     
     </script>
+    <script>
+    // SHOW/HIDE BUTTON WHEN SCROLLING + SCROLL TO TOP
+    const backToTopBtn = document.getElementById("backToTop");
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) { // show after scrolling 300px
+        backToTopBtn.style.display = "block";
+      } else {
+        backToTopBtn.style.display = "none";
+      }
+    });
+
+    backToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 {% block extra_scripts %}{% endblock %}
