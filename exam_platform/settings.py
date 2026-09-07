@@ -23,16 +23,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = os.environ.get('DEBUG')
 
-#ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    "striking-corned-rebuttal.ngrok-free.dev",
-]
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(",")
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://striking-corned-rebuttal.ngrok-free.dev",
-]
+#CSRF_TRUSTED_ORIGINS = []
+
 # -----------------------------------------------------------------------
 # APPLICATION DEFINITION
 # -----------------------------------------------------------------------
@@ -93,11 +87,24 @@ ASGI_APPLICATION = 'exam_platform.asgi.application'
 # DATABASE
 # -----------------------------------------------------------------------
 DATABASES = {
+    "default": {
+        "ENGINE": os.environ.get("DB_ENGINE"),
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT"),
+    }
+}
+
+
+""""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+"""""
 
 # -----------------------------------------------------------------------
 # PASSWORD VALIDATION

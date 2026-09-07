@@ -7,3 +7,4 @@ djangorestframework-simplejwt
 python-dotenv
 requests
 django-jazzmin
+psycopg2-binary
