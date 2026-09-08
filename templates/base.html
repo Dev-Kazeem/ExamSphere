@@ -14,7 +14,7 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
     {% block extra_head %}{% endblock %}
     <style>
-       body { font-family: 'Inter', sans-serif; margin: 0; background:var(--paper); color:var(--ink);}
+       body { font-family: 'Inter', sans-serif; background:var(--paper); color:var(--ink); padding-right: 0;}
     .hero-section { position: relative; min-height: calc(90 * min(var(--vh, 1vh), 1vh)); }
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,23,41,0.85) 0%, rgba(91,127,255,0.6) 100%); }
     .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -515,7 +515,7 @@
 
 </style>
 </head>
-<body class="w-100" style="background: rgb(15, 23, 41); padding-top: 40px;">
+<body class="" style="background: rgb(15, 23, 41); padding-top: 40px;">
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top border-bottom border-secondary" style="background: rgba(15, 23, 41, 0.8);">
     <div class="container">
         <a class="navbar-brand fw-bold" href="{% url 'home' %}" style="color: rgb(99, 202, 255); font-weight: 700; font-style: italic; font-size: 24px;">
@@ -781,7 +781,7 @@
     <div class="section-label mb-2">Course reviews</div>
     <h2 class="display-serif fw-semibold mb-5" style="font-size:2.25rem;">A running ledger of student feedback</h2>
 
-    <div class="ledger-row row g-4 align-items-center right-left">
+    <div class="ledger-row row g-4 align-items-center bottom-up">
       <div class="col-md-2">
         <img src="https://i.pravatar.cc/400?img=16" class="ledger-photo" alt="Sofia Musa">
       </div>
@@ -798,7 +798,7 @@
       </div>
     </div>
 
-    <div class="ledger-row row g-4 align-items-center left-right">
+    <div class="ledger-row row g-4 align-items-center bottom-up">
       <div class="col-md-2">
         <img src="https://i.pravatar.cc/400?img=51" class="ledger-photo" alt="Ibrahim Yusuf">
       </div>
@@ -815,7 +815,7 @@
       </div>
     </div>
 
-    <div class="ledger-row row g-4 align-items-center right-left">
+    <div class="ledger-row row g-4 align-items-center bottom-up">
       <div class="col-md-2">
         <img src="https://plus.unsplash.com/premium_photo-1681493913693-5f2260905f34?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8YmxhY2slMjBzdHVkZW50JTIwcHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D" loading="lazy" class="ledger-photo" alt="Hauwa Khalid">
       </div>
@@ -875,29 +875,17 @@
   <script>
 
       window.sr = ScrollReveal();
-      sr.reveal('.top-down',{
-        duration: 2000,
-        origin:'top',
-        distance: '300px'
+      sr.reveal('.bottom-up',{
+        duration: 4000,
+        origin:'bottom',
+        distance: '50px'
       }); 
 
-      sr.reveal('.bottom-up',{
+      sr.reveal('.form-bottom-up',{
         duration: 2000,
         origin:'bottom',
         distance: '100px',
       }); 
-
-      sr.reveal('.right-left',{
-        duration: 2000,
-        origin: 'right',
-        distance: '250px'
-      }) 
-
-      sr.reveal('.left-right',{
-        duration: 2000,
-        origin: 'left',
-        distance: '250px'
-      }) 
     
     </script>
     <script>

@@ -7,6 +7,7 @@ Two user roles: Student and Teacher.
 
 from pathlib import Path
 import os
+import cloudinary
 import dj_database_url
 from dotenv import load_dotenv
 
@@ -29,6 +30,17 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(",")
 #CSRF_TRUSTED_ORIGINS = []
 
 # -----------------------------------------------------------------------
+# CLOUDINARY
+# -----------------------------------------------------------------------
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
+
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# -----------------------------------------------------------------------
 # APPLICATION DEFINITION
 # -----------------------------------------------------------------------
 INSTALLED_APPS = [
@@ -45,6 +57,8 @@ INSTALLED_APPS = [
     # Third-party
     'crispy_forms',
     'crispy_bootstrap5',
+    'cloudinary_storage',
+    'cloudinary',
    
 
     # Local apps
