@@ -24,7 +24,7 @@ def send_verification_email(request, user):
     verify_path = reverse('accounts:verify_email', kwargs={'uidb64': uid, 'token': token})
     verify_url = f"{protocol}://{domain}{verify_path}"
 
-    subject = "Verify your Online Exam Platform account"
+    subject = "Verify your ExamSphere account"
     message = render_to_string('accounts/email/verification_email.txt', {
         'user': user,
         'verify_url': verify_url,
@@ -32,7 +32,7 @@ def send_verification_email(request, user):
     send_mail(
         subject,
         message,
-        getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@examplatform.local'),
+        getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@examsphere.local'),
         [user.email],
         fail_silently=False,
     )
