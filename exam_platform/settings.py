@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # a real secret key to version control.
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(",")
 
@@ -59,25 +59,6 @@ INSTALLED_APPS = [
     'payments',
 ]
 
-
-# -----------------------------------------------------------------------
-# CLOUDINARY
-# -----------------------------------------------------------------------
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
-}
-
-
-STORAGES = {
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -151,18 +132,48 @@ USE_TZ = True
 # -----------------------------------------------------------------------
 # STATIC & MEDIA FILES
 # -----------------------------------------------------------------------
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# Static files
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Uploaded media files
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
+# Storage configuration
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+# Compatibility setting required by your installed Cloudinary storage package
 STATICFILES_STORAGE = (
     "django.contrib.staticfiles.storage.StaticFilesStorage"
 )
+
+
+
+# -----------------------------------------------------------------------
+# CLOUDINARY
+# -----------------------------------------------------------------------
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+    secure=True,
+)
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 # -----------------------------------------------------------------------
 # CRISPY FORMS

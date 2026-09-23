@@ -587,7 +587,7 @@
      {% if user.is_authenticated %}
        <a class="btn mt-6 font-semibold px-8 py-2 rounded-xl text-lg" href="{% url 'exams:student_dashboard' %}" style="background: rgb(99, 202, 255); color: rgb(15, 23, 41); font-weight: 600; font-style: italic; font-size: 16px;">Start Exam</a>
      {% else %} 
-       <a class="btn mt-6 font-semibold px-8 py-3 rounded-xl text-lg" style="background: rgb(99, 202, 255); color: rgb(15, 23, 41); font-weight: 600; font-style: normal; font-size: 16px;" href="{%  url 'accounts:login' %}">Get Started Free</a>
+       <a class="btn mt-6 font-semibold px-8 py-3 rounded-xl text-lg" style="background: rgb(99, 202, 255); color: rgb(15, 23, 41); font-weight: 600; font-style: normal; font-size: 16px;" href="{%  url 'accounts:register_landing' %}">Get Started Free</a>
      {% endif %} 
     </div>
     </header>
