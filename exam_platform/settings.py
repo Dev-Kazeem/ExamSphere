@@ -7,7 +7,6 @@ Two user roles: Student and Teacher.
 
 from pathlib import Path
 import os
-import cloudinary
 import dj_database_url
 from dotenv import load_dotenv
 
@@ -56,12 +55,14 @@ INSTALLED_APPS = [
     'accounts',
     'exams',
     'api',
+    'core',
     'payments',
 ]
 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -150,26 +151,24 @@ STORAGES = {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        "BACKEND": "core.storage.ForgivingManifestStaticFilesStorage",
     },
 }
 
-# Compatibility setting required by your installed Cloudinary storage package
-STATICFILES_STORAGE = (
-    "django.contrib.staticfiles.storage.StaticFilesStorage"
-)
+STATICFILES_STORAGE = "core.storage.ForgivingManifestStaticFilesStorage"
 
 
 
 # -----------------------------------------------------------------------
 # CLOUDINARY
 # -----------------------------------------------------------------------
-cloudinary.config(
-    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.environ.get("CLOUDINARY_API_KEY"),
-    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
-    secure=True,
-)
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
+
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -1,0 +1,13 @@
+{
+  "builds": [
+    {
+      "src": "exam_platform/wsgi.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb" }
+    }
+  ],
+  "routes": [
+    { "src": "/static/(.*)", "dest": "exam_platform/wsgi.py" },
+    { "src": "/(.*)", "dest": "exam_platform/wsgi.py" }
+  ]
+}
