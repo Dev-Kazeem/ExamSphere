@@ -158,7 +158,6 @@ STORAGES = {
 STATICFILES_STORAGE = "core.storage.ForgivingManifestStaticFilesStorage"
 
 
-
 # -----------------------------------------------------------------------
 # CLOUDINARY
 # -----------------------------------------------------------------------
