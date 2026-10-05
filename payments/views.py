@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
-
+from django.utils import timezone
 from exams.permissions import student_required
 from .models import Semester, SemesterSubscription
 
@@ -97,15 +97,22 @@ def flutterwave_webhook(request):
     return JsonResponse({"status": "ok"})
 
 
+
+
 @student_required
 def checkout(request):
+    today = timezone.now().date()
     semesters = Semester.objects.filter(is_active=True)
     my_subscriptions = SemesterSubscription.objects.filter(
         student=request.user, status='PAID'
     ).select_related('semester')
     paid_semester_ids = set(my_subscriptions.values_list('semester_id', flat=True))
+    current_semester_ids = set(
+        semesters.filter(start_date__lte=today, end_date__gte=today).values_list('id', flat=True)
+    )
     return render(request, 'payments/checkout.html', {
         'semesters': semesters,
         'my_subscriptions': my_subscriptions,
         'paid_semester_ids': paid_semester_ids,
+        'current_semester_ids': current_semester_ids,
     })

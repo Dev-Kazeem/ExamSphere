@@ -513,6 +513,17 @@
   transition: transform 0.3s ease, background 0.3s ease;
 }
 
+.cardshadow {
+   background: radial-gradient(circle at 30% 30%, #ec4899, transparent 60%),
+              radial-gradient(circle at 70% 60%, #10b981, transparent 55%);
+}
+.navtext{
+  font-family: 'inter' satoshi;
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: #cbd5e1;
+}
 </style>
 </head>
 <body class="" style="background: rgb(15, 23, 41); padding-top: 40px;">
@@ -528,13 +539,13 @@
             <ul class="navbar-nav ms-auto align-items-lg-center">
                 {% if user.is_authenticated %}
                     {% if user.is_teacher %}
-                        <li class="nav-item"><a class="nav-link text-light" href="{% url 'exams:teacher_dashboard' %}">My Exams</a></li>
-                        <li class="nav-item"><a class="nav-link text-light" href="{% url 'exams:exam_create' %}">Create Exam</a></li>
+                        <li class="nav-item"><a class="nav-link navtext" href="{% url 'exams:teacher_dashboard' %}">My Exams</a></li>
+                        <li class="nav-item"><a class="nav-link navtext" href="{% url 'exams:exam_create' %}">Create Exam</a></li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link text-light" href="{% url 'contact' %}">Contact Us</a></li>
-                        <li class="nav-item"><a class="nav-link text-light" href="{% url 'exams:student_dashboard' %}">Available Exams</a></li>
-                        <li class="nav-item"><a class="nav-link text-light" href="{% url 'exams:my_results' %}">My Results</a></li>
-                        <li class="nav-item"><a class="nav-link text-light" href="{% url 'payments:checkout' %}">Make Payment </a></li>
+                        <li class="nav-item"><a class="nav-link navtext" href="{% url 'contact' %}">Contact Us</a></li>
+                        <li class="nav-item"><a class="nav-link navtext" href="{% url 'exams:student_dashboard' %}">Available Exams</a></li>
+                        <li class="nav-item"><a class="nav-link navtext" href="{% url 'exams:my_results' %}">My Results</a></li>
+                        <li class="nav-item"><a class="nav-link navtext" href="{% url 'payments:checkout' %}">Make Payment </a></li>
                     {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">

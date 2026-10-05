@@ -9,7 +9,7 @@
     {% for item in exam_status %}
     <div class="col-md-6 bottom-up">
         <div class="card h-100 shadow-sm">
-            <div class="card-body">
+            <div class="card-body cardshadow">
                 <h5>{{ item.exam.title }}</h5>
                 <p class="text-muted mb-1">{{ item.exam.subject|default:"General" }}</p>
                 <p class="mb-1"><i class="bi bi-clock"></i> {{ item.exam.duration_minutes }} minutes &middot; {{ item.exam.num_questions }} questions</p>
