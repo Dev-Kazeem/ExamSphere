@@ -5,11 +5,18 @@ from .models import CustomUser
 
 
 class StudentSignUpForm(UserCreationForm):
+    LEVEL_CHOICES = [
+        ('100', '100 Level'),
+        ('200', '200 Level'),
+        ('300', '300 Level'),
+        ('400', '400 Level'),
+        ('500', '500 Level'),
+    ]
     email = forms.EmailField(required=True)
     first_name = forms.CharField(required=True, max_length=150)
     last_name = forms.CharField(required=True, max_length=150)
-    roll_number = forms.CharField(required=False, max_length=50, label="Student ID / Roll Number")
-    grade_level = forms.CharField(required=False, max_length=50, label="Grade / Class")
+    roll_number = forms.CharField(required=False, max_length=50, label="Matric Number")
+    grade_level = forms.ChoiceField(required=False, label="Level", choices=LEVEL_CHOICES)
 
     class Meta:
         model = CustomUser
