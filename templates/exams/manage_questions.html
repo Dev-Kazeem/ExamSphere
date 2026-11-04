@@ -2,12 +2,14 @@
 {% block title %}Manage Questions — {{ exam.title }}{% endblock %}
 {% block content %}
 <div class="container space-top">
+<h3 class="text-light">{{ exam.title }}</h3>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-        <h3 class="text-light">{{ exam.title }}</h3>
         <p class="mb-0 text-light btn btn-primary">{{ exam.question_count }} question(s) &middot; {{ exam.total_marks }} total marks</p>
     </div>
-    <a href="{% url 'exams:question_create' exam.id %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Question</a>
+    <div>
+        <a href="{% url 'exams:question_create' exam.id %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Question</a>
+    </div>
 </div>
 
 {% if not exam.is_published %}
