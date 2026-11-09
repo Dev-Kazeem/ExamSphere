@@ -27,7 +27,14 @@ DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(",")
 
 #CSRF_TRUSTED_ORIGINS = []
+CSRF_FAILURE_VIEW = 'core.error_views.csrf_failure'
 
+# Needed behind Vercel's proxy. A missing value here is the most common cause
+# of "CSRF verification failed" in production.
+CSRF_TRUSTED_ORIGINS = [
+    o.strip() for o in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', '').split(',') if o.strip()
+]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # -----------------------------------------------------------------------
 # APPLICATION DEFINITION

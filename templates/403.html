@@ -1,0 +1,15 @@
+{% extends "errors/error_base.html" %}
+{% block error_title %}Access denied{% endblock %}
+{% block error_code %}403{% endblock %}
+{% block error_heading %}You don't have access to this page{% endblock %}
+{% block error_message %}
+    This page is restricted. If you think you should have access, try logging in
+    with a different account or contact support.
+{% endblock %}
+{% block error_actions %}
+    <a href="/" class="btn btn-primary">Go to home</a>
+    {% if not user.is_authenticated %}
+        <a href="{% url 'accounts:login' %}" class="btn btn-outline-secondary">Log in</a>
+    {% endif %}
+    <a href="{% url 'core:contact' %}" class="btn btn-outline-secondary">Contact support</a>
+{% endblock %}

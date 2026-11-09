@@ -1,0 +1,13 @@
+{% extends "errors/error_base.html" %}
+{% block error_title %}Session expired{% endblock %}
+{% block error_code %}403{% endblock %}
+{% block error_heading %}Your session expired{% endblock %}
+{% block error_message %}
+    For your security, that form couldn't be submitted. This usually happens when a page
+    has been open for a long time, cookies are blocked, or you logged out in another tab.
+    Go back, refresh the page, and try again.
+{% endblock %}
+{% block error_actions %}
+    <a href="javascript:history.back()" class="btn btn-primary">Go back</a>
+    <a href="{% url 'accounts:login' %}" class="btn btn-outline-secondary">Log in again</a>
+{% endblock %}
