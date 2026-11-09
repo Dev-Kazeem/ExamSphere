@@ -8,7 +8,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.http import url_has_allowed_host_and_scheme
-
+from django_ratelimit.decorators import ratelimit
 
 from .forms import (
     StudentSignUpForm, TeacherSignUpForm, ProfileUpdateForm,
@@ -27,7 +27,7 @@ def is_staff_user(user):
     return user.is_staff
 
 
-
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def register_student(request):
     if request.method == 'POST':
         form = StudentSignUpForm(request.POST)
@@ -39,7 +39,7 @@ def register_student(request):
         form = StudentSignUpForm()
     return render(request, 'accounts/register.html', {'form': form, 'role': 'Student'})
 
-
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 @user_passes_test(is_staff_user)
 def register_teacher(request):
     if request.method == 'POST':
@@ -52,7 +52,7 @@ def register_teacher(request):
         form = TeacherSignUpForm()
     return render(request, 'accounts/register.html', {'form': form, 'role': 'Teacher'})
 
-
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def login_view(request):
     next_url = request.POST.get('next') or request.GET.get('next')
     if request.method == 'POST':
@@ -80,13 +80,13 @@ def login_view(request):
 
     return render(request, 'registration/login.html', {'form': form})
 
-
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def logout_view(request):
     logout(request)
     messages.success(request, "You have been logged out successfully.")
     return redirect('home')
 
-
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def verify_email(request, uidb64, token):
     """Activate the account if the signed link is valid, then log the user in."""
     try:
@@ -105,7 +105,7 @@ def verify_email(request, uidb64, token):
 
     return render(request, 'registration/verify_email_invalid.html')
 
-
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def resend_verification(request):
     if request.method == 'POST':
         form = ResendVerificationForm(request.POST)
