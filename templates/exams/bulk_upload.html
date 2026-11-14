@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Bulk upload questions{% endblock %}
+
+{% block content %}
+<div class="container row justify-content-center space-top">
+    <div class="col-lg-8">
+        <a href="{% url 'exams:manage_questions' exam.id %}" class="text-decoration-none fw-bold">&larr; Back to {{ exam.title }}</a>
+
+        <div class="card shadow-sm my-3">
+            <div class="card-body p-4">
+                <h3 class="mb-1">Bulk upload questions</h3>
+                <p class="text-muted">Upload a CSV, Word (.docx) or PDF file. You'll review everything before it's saved.</p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary mt-2">Upload &amp; preview</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="mb-3">File format guide</h5>
+                <ul class="nav nav-tabs mb-3" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-csv" type="button">CSV</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-text" type="button">Word / PDF</button></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab-csv">
+                        <p class="small">One question per row. The first row must be the headers:</p>
+                        <p class="small"><code>question, option_a, option_b, option_c, option_d, option_e, option_f, correct, marks, explanation</code></p>
+                        <ul class="small text-muted">
+                            <li><strong>Required:</strong> question, option_a, option_b, correct. Options c to f are optional.</li>
+                            <li><code>correct</code> is a letter (<code>B</code>) or the exact text of the right option.</li>
+                            <li><code>marks</code> and <code>explanation</code> are optional.</li>
+                        </ul>
+                        <a href="{% url 'exams:bulk_upload_sample' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-download"></i> Download sample CSV
+                        </a>
+                    </div>
+                    <div class="tab-pane fade" id="tab-text">
+                        <p class="small">Write each question in this layout (blank lines between questions are optional):</p>
+<pre class="bg-light p-3 rounded small mb-3">1. What keyword defines a function in Python?
+A. func
+B. def
+C. lambda
+D. fn
+Answer: B
+Marks: 2
+Explanation: def declares a function.
+
+2. Which data type is immutable?
+A. list
+B. dict
+C. tuple
+D. set
+Answer: C</pre>
+                        <ul class="small text-muted mb-0">
+                            <li>Options run A to F. <code>Answer:</code> is required; <code>Marks:</code> and <code>Explanation:</code> are optional.</li>
+                            <li><strong>Type the numbers and letters as text.</strong> Word's automatic list numbering isn't stored in the text, so it can't be read. (Exporting to PDF turns it into real text, which does work.)</li>
+                            <li>Old <code>.doc</code> files aren't supported: use File &rarr; Save As &rarr; .docx.</li>
+                            <li>Scanned or image-only PDFs aren't supported, because they contain no text to read.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

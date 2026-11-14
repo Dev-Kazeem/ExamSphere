@@ -5,12 +5,19 @@
 <h3 class="text-light">{{ exam.title }}</h3>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-        <p class="mb-0 text-light btn btn-primary">{{ exam.question_count }} question(s) &middot; {{ exam.total_marks }} total marks</p>
+        <p class="mb-0 text-light btn btn-primary btn-sm btn-md-normal m-1">{{ exam.question_count }} question(s) &middot; {{ exam.total_marks }} total marks</p>
     </div>
-    <div>
-        <a href="{% url 'exams:question_create' exam.id %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Question</a>
+    <div class="">
+        <a href="{% url 'exams:question_create' exam.id %}" class="btn btn-primary btn-sm btn-md-normal m-1"><i class="bi bi-plus-lg"></i> Add Question</a>
+        <a href="{% url 'exams:bulk_upload' exam.id %}" class="btn btn-outline-primary btn-sm btn-md-normal m-1">
+          <i class="bi bi-upload"></i> Bulk upload
+        </a>
     </div>
 </div>
+<div>
+  
+</div>
+
 
 {% if not exam.is_published %}
 

@@ -73,3 +73,15 @@ ChoiceFormSet = inlineformset_factory(
     max_num=6,
     can_delete=True,
 )
+
+
+class BulkUploadForm(forms.Form):
+    file = forms.FileField(
+        label="Question file",
+        help_text="CSV, DOCX or PDF, up to 4 MB.",
+        widget=forms.FileInput(attrs={'accept': '.csv,.docx,.pdf'}),
+    )
+    default_marks = forms.IntegerField(
+        min_value=1, max_value=100, initial=1, label="Default marks per question",
+        help_text="Used for any question that doesn't set its own marks.",
+    )

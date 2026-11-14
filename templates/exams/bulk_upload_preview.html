@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Review import{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <h3 class="mb-1">Review import</h3>
+        <p class="text-muted">
+            <strong>{{ filename }}</strong> &middot; nothing is saved until you confirm below.
+        </p>
+
+        <div class="alert alert-{% if invalid_count %}warning{% else %}success{% endif %}">
+            <strong>{{ valid_count }}</strong> question{{ valid_count|pluralize }} ready to import.
+            {% if invalid_count %}
+                <strong>{{ invalid_count }}</strong> had problems and will be skipped. Fix them in your file and re-upload, or import the valid ones and add the rest by hand.
+            {% endif %}
+        </div>
+
+        {% for q in questions %}
+        <div class="card shadow-sm mb-3 {% if q.errors %}border-danger{% endif %}">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong>Question {{ q.number }}</strong>
+                    <span class="badge text-bg-secondary">{{ q.marks|default:default_marks }} mark{{ q.marks|default:default_marks|pluralize }}</span>
+                </div>
+                <p class="mt-2 mb-2">{{ q.text }}</p>
+                <ul class="list-unstyled mb-2">
+                    {% for letter, text in q.options.items %}
+                    <li class="{% if letter == q.answer %}text-success fw-semibold{% endif %}">
+                        {{ letter }}. {{ text }}
+                        {% if letter == q.answer %}<i class="bi bi-check-circle-fill"></i>{% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% if q.explanation %}
+                    <p class="small text-muted mb-2">Explanation: {{ q.explanation }}</p>
+                {% endif %}
+                {% for error in q.errors %}
+                    <div class="small text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <form method="post" class="d-flex justify-content-end gap-2 mb-5">
+            {% csrf_token %}
+            <a href="{% url 'exams:bulk_upload' exam.id %}" class="btn btn-outline-secondary">Upload a different file</a>
+            <button type="submit" class="btn btn-success" {% if not valid_count %}disabled{% endif %}>
+                Import {{ valid_count }} question{{ valid_count|pluralize }}
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -18,6 +18,11 @@ urlpatterns = [
     path('teacher/<int:exam_id>/results/', views.exam_results, name='exam_results'),
     path('teacher/attempt/<int:attempt_id>/review/', views.attempt_review_teacher, name='attempt_review_teacher'),
 
+    # bulk_upload
+    path('teacher/<int:exam_id>/questions/bulk-upload/', views.bulk_upload, name='bulk_upload'),
+    path('teacher/<int:exam_id>/questions/bulk-upload/preview/', views.bulk_upload_preview, name='bulk_upload_preview'),
+    path('teacher/questions/bulk-upload/sample.csv', views.bulk_upload_sample_csv, name='bulk_upload_sample'),
+
     # Student
     path('student/', views.student_dashboard, name='student_dashboard'),
     path('student/<int:exam_id>/start/', views.exam_start, name='exam_start'),

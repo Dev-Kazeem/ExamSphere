@@ -1,12 +1,17 @@
+import csv
+from dataclasses import asdict
+from django.http import HttpResponse
+from .bulk_import import CSV_HEADERS, ImportFileError, parse_uploaded_file
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count, Max
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from .forms import ExamForm, QuestionForm, ChoiceFormSet
-from .models import Exam, Question, ExamAttempt, StudentAnswer
+from .forms import BulkUploadForm, ExamForm, QuestionForm, ChoiceFormSet
+from .models import Choice, Exam, Question, ExamAttempt, StudentAnswer
 from .permissions import teacher_required, student_required
 
 
@@ -157,6 +162,93 @@ def attempt_review_teacher(request, attempt_id):
     answers = attempt.answers.select_related('question', 'selected_choice').order_by('question__order')
     return render(request, 'exams/attempt_review.html', {'attempt': attempt, 'answers': answers, 'is_teacher_view': True})
 
+
+
+def _bulk_key(exam_id):
+    return f'bulk_import_{exam_id}'
+
+
+@teacher_required
+def bulk_upload(request, exam_id):
+    exam = get_object_or_404(Exam, id=exam_id, teacher=request.user)
+    if request.method == 'POST':
+        form = BulkUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            uploaded = form.cleaned_data['file']
+            try:
+                questions = parse_uploaded_file(uploaded)
+            except ImportFileError as exc:
+                form.add_error('file', str(exc))
+            else:
+                request.session[_bulk_key(exam.id)] = {
+                    'filename': uploaded.name,
+                    'default_marks': form.cleaned_data['default_marks'],
+                    'questions': [asdict(q) for q in questions],
+                }
+                return redirect('exams:bulk_upload_preview', exam_id=exam.id)
+    else:
+        form = BulkUploadForm()
+    return render(request, 'exams/bulk_upload.html', {'form': form, 'exam': exam})
+
+
+@teacher_required
+def bulk_upload_preview(request, exam_id):
+    exam = get_object_or_404(Exam, id=exam_id, teacher=request.user)
+    key = _bulk_key(exam.id)
+    data = request.session.get(key)
+    if not data:
+        messages.error(request, "Your upload expired. Please upload the file again.")
+        return redirect('exams:bulk_upload', exam_id=exam.id)
+
+    questions = data['questions']
+    valid = [q for q in questions if not q['errors']]
+
+    if request.method == 'POST':
+        if not valid:
+            messages.error(request, "There are no valid questions to import.")
+            return redirect('exams:bulk_upload', exam_id=exam.id)
+        with transaction.atomic():
+            last_order = exam.questions.aggregate(m=Max('order'))['m'] or 0
+            for offset, q in enumerate(valid, start=1):
+                question = Question.objects.create(
+                    exam=exam,
+                    text=q['text'],
+                    marks=q['marks'] or data['default_marks'],
+                    order=last_order + offset,
+                    explanation=q['explanation'],
+                )
+                Choice.objects.bulk_create([
+                    Choice(question=question, text=text, is_correct=(letter == q['answer']))
+                    for letter, text in q['options'].items()
+                ])
+        del request.session[key]
+        skipped = len(questions) - len(valid)
+        msg = f"Imported {len(valid)} question{'s' if len(valid) != 1 else ''}."
+        if skipped:
+            msg += f" {skipped} skipped because of errors."
+        messages.success(request, msg)
+        return redirect('exams:manage_questions', exam_id=exam.id)
+
+    return render(request, 'exams/bulk_upload_preview.html', {
+        'exam': exam,
+        'filename': data['filename'],
+        'default_marks': data['default_marks'],
+        'questions': questions,
+        'valid_count': len(valid),
+        'invalid_count': len(questions) - len(valid),
+    })
+
+
+@teacher_required
+def bulk_upload_sample_csv(request):
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="question_template.csv"'
+    response.write('\ufeff')  # BOM so Excel reads UTF-8 correctly
+    writer = csv.writer(response)
+    writer.writerow(CSV_HEADERS)
+    writer.writerow(['What keyword defines a function in Python?', 'func', 'def', 'lambda', 'fn', '', '', 'B', 2, 'def declares a function.'])
+    writer.writerow(['Which data type is immutable?', 'list', 'dict', 'tuple', 'set', '', '', 'C', 1, ''])
+    return response
 
 # =========================================================================
 # STUDENT VIEWS
