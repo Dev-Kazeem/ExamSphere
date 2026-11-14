@@ -69,7 +69,7 @@ def verify_payment(request):
         from django.utils import timezone
         sub.paid_at = timezone.now()
         sub.save()
-        messages.success(request, f"Payment confirmed — you now have access to {sub.semester.name}.")
+        messages.success(request, f"Payment confirmed — you now have access to {sub.semester.name} exams.")
     else:
         sub.status = 'FAILED'
         sub.save()

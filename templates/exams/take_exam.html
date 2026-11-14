@@ -49,10 +49,7 @@
          Previous <i class="bi bi-arrow-left"></i> 
         </button>
 
-        <div>
-          <!-- Optional: jump-to-question dots -->
-          <span id="jump-dots"></span>
-        </div>
+        
 
         <button type="button" id="next-btn" class="btn btn-primary btn-sm btn-md" onclick="showQuestion(currentIndex + 1)">
           Next <i class="bi bi-arrow-right"></i>
@@ -61,6 +58,10 @@
           Submit Exam
         </button>
       </div>
+        <div class="mt-4 ms-4 fs-5">
+          <!-- Optional: jump-to-question dots -->
+          <span id="jump-dots"></span>
+        </div>
     </form>
   </div>
 </div>
@@ -99,7 +100,7 @@
       for (let i = 0; i < totalQuestions; i++) {
           const dot = document.createElement('span');
           dot.textContent = i + 1;
-          dot.className = 'badge rounded-pill mx-1 ' +
+          dot.className = 'badge rounded p-3 m-1 ' +
               (i === currentIndex ? 'bg-primary' : (answeredIndexes[i] ? 'bg-success' : 'bg-secondary'));
           dot.style.cursor = 'pointer';
           dot.onclick = () => showQuestion(i);
@@ -131,6 +132,3 @@
   setInterval(tick, 1000);
 </script>
 {% endblock %}
-
-
-
