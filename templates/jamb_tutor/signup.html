@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .lang-card input{display:none}
+  .lang-card label{cursor:pointer; border:2px solid #ddd; border-radius:12px; padding:12px; display:block; text-align:center; transition:0.2s}
+  .lang-card input:checked + label{border-color:#198754; background:#e8f5e9; font-weight:bold}
+  .school-btn{border:2px solid #ddd; border-radius:20px; padding:6px 14px; cursor:pointer; font-size:14px}
+  .school-btn.active{background:#0d6efd; color:white; border-color:#0d6efd}
+</style>
+
+<div class="container mt-3 mb-5" style="max-width:520px">
+  <!-- Header -->
+  <div class="text-center mb-3">
+    <div style="font-size:40px">🎓</div>
+    <h3 class="fw-bold">JAMB Tutor</h3>
+    <p class="text-muted small">Learn for JAMB in your own language.<br>Free Mock • AI Teacher • WhatsApp Drill</p>
+  </div>
+
+  {% if messages %}
+    {% for m in messages %}<div class="alert alert-danger py-2">{{ m }}</div>{% endfor %}
+  {% endif %}
+
+  <div class="card shadow border-0 rounded-4">
+    <div class="card-body p-4">
+      <form method="POST">
+        {% csrf_token %}
+
+        <!-- Name -->
+        <label class="fw-bold small">Full Name</label>
+        <input name="name" class="form-control form-control-lg mb-3" placeholder="e.g Musa Ibrahim" required>
+
+        <!-- Phone = Username -->
+        <label class="fw-bold small">Phone Number (This go be your username)</label>
+        <input name="phone" type="tel" class="form-control form-control-lg mb-1" placeholder="0803 123 4567" required>
+        <small class="text-muted d-block mb-3">We go use am to send you WhatsApp drill.</small>
+       
+        <!-- Email address -->
+        <label class="fw-bold">Email Address *</label>
+        <input type="email" name="email" class="form-control mb-3" placeholder="e.g. musa@gmail.com" required>
+        <small class="text-muted d-block mb-3">We will send verification link to this email. Check spam if you no see am.</small>
+        
+        <!-- Password -->
+        <label class="fw-bold small">Create Password</label>
+        <input name="password" type="password" class="form-control form-control-lg mb-3" placeholder="At least 6 characters" required>
+
+        <!-- Language - This is the magic -->
+        <label class="fw-bold small">Which language make AI teach you?</label>
+        <div class="row g-2 mb-3 lang-card">
+          <div class="col-4">
+            <input type="radio" name="language" value="Pidgin" id="pidgin" checked>
+            <label for="pidgin">🗣️<br>Pidgin<br><small>Easy to understand</small></label>
+          </div>
+          <div class="col-4">
+            <input type="radio" name="language" value="Hausa" id="hausa">
+            <label for="hausa">🌙<br>Hausa<br><small>Da Hausa</small></label>
+          </div>
+          <div class="col-4">
+            <input type="radio" name="language" value="English" id="english">
+            <label for="english">📖<br>English<br><small>Simple English</small></label>
+          </div>
+        </div>
+
+        <!-- Combination -->
+        <label class="fw-bold small">Your JAMB Combination</label>
+        <select name="combination" class="form-select form-select-lg mb-3">
+          <option value="Science">Science - English, Maths, Physics, Chemistry</option>
+          <option value="Science Biology">Science - English, Maths, Biology, Chemistry</option>
+          <option value="Commercial">Commercial - English, Maths, Economics, Commerce</option>
+          <option value="Art">Art - English, Lit, Govt, CRS/IRS</option>
+        </select>
+
+        <!-- Target School -->
+        <label class="fw-bold small">Which school you dey target?</label>
+        <div class="d-flex flex-wrap gap-2 mb-2">
+          <span class="school-btn active" onclick="pickSchool(this,'UNIJOS')">UNIJOS</span>
+          <span class="school-btn" onclick="pickSchool(this,'UniAbuja')">UniAbuja</span>
+          <span class="school-btn" onclick="pickSchool(this,'ABU Zaria')">ABU Zaria</span>
+          <span class="school-btn" onclick="pickSchool(this,'Unilag')">Unilag</span>
+          <span class="school-btn" onclick="pickSchool(this,'UI')">UI</span>
+        </div>
+        <input type="hidden" name="target_school" id="target_school" value="UNIJOS">
+        <input name="target_school_custom" class="form-control mb-3" placeholder="Or type other school here..." oninput="document.getElementById('target_school').value=this.value">
+
+        <!-- Target Score -->
+        <label class="fw-bold small">Your Target Score (out of 400)</label>
+        <input name="target_score" type="range" min="180" max="380" step="10" value="280" class="form-range" oninput="document.getElementById('scoreLabel').innerText=this.value">
+        <p class="text-center"><span id="scoreLabel" class="badge bg-success fs-6">280</span> / 400</p>
+
+        <button class="btn btn-success btn-lg w-100 rounded-pill fw-bold">Start Learning Free 🚀</button>
+        <p class="text-center small text-muted mt-2">By signing up, you agree to get WhatsApp drill messages.</p>
+      </form>
+    </div>
+  </div>
+
+  <p class="text-center mt-3">Already have account? <a href="{% url 'accounts:login' %}" class="fw-bold">Login</a></p>
+  <p class="text-center small"><a href="/">← Back to University Platform</a></p>
+</div>
+
+<script>
+function pickSchool(el, val){
+  document.querySelectorAll('.school-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('target_school').value = val;
+}
+</script>
+{% endblock %}

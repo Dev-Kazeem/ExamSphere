@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 text-center" style="max-width:500px">
+<h1>{{ score_400 }}/400</h1>
+<p>You got {{ score }} / {{ total }} correct</p>
+{% if score_400 >= profile.target_score %}<div class="alert alert-success">You don pass your target for {{ profile.target_school }}! 🎉</div>
+{% else %}<div class="alert alert-warning">You need {{ profile.target_score }} for {{ profile.target_school }}. Keep practicing.</div>{% endif %}
+<a href="/jamb/mock/" class="btn btn-primary">Try Again</a> <a href="/jamb/dashboard/" class="btn btn-secondary">Dashboard</a>
+</div>
+{% endblock %}

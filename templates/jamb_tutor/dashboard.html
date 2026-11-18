@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="container mt-4" style="max-width:700px">
+  <h3>Welcome {{ user.first_name }} 👋</h3>
+  <p>Target: <b>{{ profile.target_school }} - {{ profile.target_score }}/400</b> | Language: {{ profile.preferred_language }}</p>
+  <div class="card p-4 mb-3 text-center"><h1>{{ last_score }}/400</h1><p>Last Mock Score</p></div>
+  <div class="row g-3">
+    <div class="col-6"><a href="/jamb/mock/" class="btn btn-primary w-100 p-3">📝 Take Mock</a></div>
+    <div class="col-6"><a href="/jamb/ask/" class="btn btn-success w-100 p-3">🤖 Ask AI Teacher</a></div>
+  </div>
+  <div class="card mt-3 p-3"><b>WhatsApp Drill:</b> Save our number and send DRILL on WhatsApp to practice daily.</div>
+  <h5 class="mt-4">Recent Mocks</h5>
+  {% for e in exams %}<div class="card p-2 mb-2">{{ e.date_taken|date:"d M" }} - {{ e.score }}/{{ e.total }} = {{ e.score_400 }}/400</div>{% empty %}<p>No mock yet. Take one now.</p>{% endfor %}
+</div>
+{% endblock %}

@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import JambQuestion, JambProfile, JambMockExam
 
-# Register your models here.
+
+admin.site.register(JambQuestion)
+admin.site.register(JambProfile)
+admin.site.register(JambMockExam)

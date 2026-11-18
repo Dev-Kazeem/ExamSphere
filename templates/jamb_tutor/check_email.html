@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 text-center" style="max-width:500px">
+  <h1>📧 Check Your Email</h1>
+  <p>We sent verification link to <b>{{ email }}</b></p>
+  <p class="text-muted">Click the link in the email to activate your account. Check Spam / Promotions if you no see am.</p>
+  <a href="/jamb/signup/" class="btn btn-outline-secondary btn-sm">Use another email</a>
+  <p class="mt-3 small">Didn't get email? Wait 2 mins then check spam.</p>
+</div>
+{% endblock %}

@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'api',
     'core',
     'payments',
+    'jamb_tutor',
 ]
 
 
@@ -239,6 +240,14 @@ ADMINS = [tuple(pair.split(':')) for pair in os.environ.get('ADMINS', '').split(
 FLUTTERWAVE_PUBLIC_KEY = os.environ.get('FLUTTERWAVE_PUBLIC_KEY', '')
 FLUTTERWAVE_SECRET_KEY = os.environ.get('FLUTTERWAVE_SECRET_KEY', '')
 FLUTTERWAVE_WEBHOOK_SECRET = os.environ.get('FLUTTERWAVE_WEBHOOK_SECRET', '')
+FLUTTERWAVE_ENCRPYTION_KEY = os.environ.get('FLUTTERWAVE_ENCRPYTION_KEY', '')
+
+
+# Add at bottom
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+WHATSAPP_TOKEN = os.getenv("WHATSAPP_TOKEN")
+WHATSAPP_PHONE_ID = os.getenv("WHATSAPP_PHONE_ID")
+WHATSAPP_VERIFY_TOKEN = os.getenv("WHATSAPP_VERIFY_TOKEN", "jamb123")
 
 
 #------------------------------------------------------------------

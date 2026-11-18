@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 from core import error_views
 
 from . import views
+from jamb_tutor import views as jamb_views
 
 
 urlpatterns = [
@@ -22,8 +23,12 @@ urlpatterns = [
     path('', views.Home, name="home"),
     path('contact', views.contact_view, name='contact'),
 
-]
+    # jamb tutor
+    path('dashboard-redirect/', jamb_views.home_router, name='home_router'),
+    path('jamb/', include('jamb_tutor.urls')),
+    path('whatsapp/', include('jamb_tutor.whatsapp_urls')),
 
+]
 
 # Custom error handlers
 handler400 = 'core.error_views.error_400'
