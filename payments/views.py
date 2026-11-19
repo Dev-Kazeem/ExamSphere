@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -129,15 +129,15 @@ def checkout(request):
     today = timezone.now().date()
     semesters = Semester.objects.filter(is_active=True)
     my_subscriptions = SemesterSubscription.objects.filter(
-        student=request.user, status='PAID'
-    ).select_related('semester')
-    paid_semester_ids = set(my_subscriptions.values_list('semester_id', flat=True))
+        student=request.user, status=Status.PAID
+    ).select_related("semester")
+    paid_semester_ids = set(my_subscriptions.values_list("semester_id", flat=True))
     current_semester_ids = set(
-        semesters.filter(start_date__lte=today, end_date__gte=today).values_list('id', flat=True)
+        semesters.filter(start_date__lte=today, end_date__gte=today).values_list("id", flat=True)
     )
-    return render(request, 'payments/checkout.html', {
-        'semesters': semesters,
-        'my_subscriptions': my_subscriptions,
-        'paid_semester_ids': paid_semester_ids,
-        'current_semester_ids': current_semester_ids,
+    return render(request, "payments/checkout.html", {
+        "semesters": semesters,
+        "my_subscriptions": my_subscriptions,
+        "paid_semester_ids": paid_semester_ids,
+        "current_semester_ids": current_semester_ids,
     })
