@@ -1,0 +1,22 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% block title %}{{ subject.full_name }} topics{% endblock %}
+
+{% block jt_content %}
+<a href="{% url 'jamb_tutor:topics' %}" class="small">&larr; All subjects</a>
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mt-1 mb-3">
+    <div><h1 class="mb-0">{{ subject.full_name }}</h1><span class="jt-mute">{{ topics|length }} topic{{ topics|length|pluralize }} &middot; {{ total }} question{{ total|pluralize }}</span></div>
+    <a href="{% url 'jamb_tutor:mock_start' %}" class="jt-btn primary sm">Take a {{ subject.name }} mock</a>
+</div>
+
+<div class="jt-box">
+    {% for t in topics %}
+    <div class="jt-subject">
+        <span class="ic"><i class="bi bi-bookmark"></i></span>
+        <span><b>{{ t.name }}</b></span>
+        <span class="n">{{ t.q_count }}<br><small class="jt-mute">question{{ t.q_count|pluralize }}</small></span>
+    </div>
+    {% empty %}
+    <p class="jt-mute mb-0">No topics have been added for this subject yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

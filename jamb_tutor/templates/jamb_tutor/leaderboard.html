@@ -1,0 +1,29 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% block title %}Leaderboard{% endblock %}
+
+{% block jt_content %}
+<h1>Leaderboard</h1>
+<p class="jt-mute">Top 10 students by average mock score.</p>
+
+{% if rows %}
+<div class="table-responsive">
+<table class="jt-table">
+    <thead><tr><th>#</th><th>Student</th><th>Target school</th><th>Average</th><th>Mocks</th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+    <tr class="{% if r.is_me %}me{% endif %}">
+        <td class="jt-rank">{{ r.rank }}</td>
+        <td>{{ r.user__username }}{% if r.is_me %} <span class="jt-badge">you</span>{% endif %}</td>
+        <td>{{ r.user__jamb_profile__target_school }}</td>
+        <td><b>{{ r.avg_pct }}%</b></td>
+        <td>{{ r.total_attempts }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% else %}
+<div class="jt-box"><p class="mb-2">Nobody is on the board yet. Finish a mock exam to be the first.</p>
+<a class="jt-btn primary sm" href="{% url 'jamb_tutor:mock_start' %}">Take a mock</a></div>
+{% endif %}
+{% endblock %}

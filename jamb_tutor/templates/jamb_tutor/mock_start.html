@@ -1,0 +1,24 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% block title %}Mock exam{% endblock %}
+
+{% block jt_content %}
+<h1>Mock exam</h1>
+<p class="jt-mute">{{ n_questions }} random questions, {{ minutes }} minutes. Pick a subject to begin. The timer starts as soon as the exam opens.</p>
+
+<form method="post" class="jt-box">
+    {% csrf_token %}
+    {% for s in subjects %}
+    <div class="jt-subject {% if s.in_combination %}mine{% endif %}">
+        <button type="submit" name="subject" value="{{ s.slug }}" {% if s.q_count < min_questions %}disabled style="opacity:.5;cursor:not-allowed;"{% endif %}>
+            <span class="ic"><i class="bi {{ s.icon }}"></i></span>
+            <span><b>{{ s.full_name }}</b>{% if s.in_combination %}<br><small class="jt-mute">In your combination</small>{% endif %}</span>
+            <span class="n">
+                {% if s.q_count < min_questions %}<small class="jt-mute">Not enough questions yet</small>
+                {% else %}{{ s.q_count }}<br><small class="jt-mute">questions</small>{% endif %}
+            </span>
+        </button>
+    </div>
+    {% endfor %}
+</form>
+<p class="mt-3"><a href="{% url 'jamb_tutor:mock_history' %}">View your attempt history</a></p>
+{% endblock %}

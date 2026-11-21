@@ -1,0 +1,41 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Sign up as a JAMB student{% endblock %}
+
+{% block jt_content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <h1 class="mb-1">Sign up as a JAMB student</h1>
+        <p class="jt-mute">We'll email you a link to verify your address. After that you are signed in automatically.</p>
+
+        <form method="post" novalidate class="jt-box mt-3">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <h2>About you</h2>
+            {{ form.full_name|as_crispy_field }}
+            <div class="row">
+                <div class="col-md-6">{{ form.username|as_crispy_field }}</div>
+                <div class="col-md-6">{{ form.phone|as_crispy_field }}</div>
+            </div>
+            {{ form.email|as_crispy_field }}
+            <div class="row">
+                <div class="col-md-6">{{ form.password1|as_crispy_field }}</div>
+                <div class="col-md-6">{{ form.password2|as_crispy_field }}</div>
+            </div>
+
+            <hr class="jt-rule">
+            <h2>Your JAMB plan</h2>
+            {{ form.preferred_language|as_crispy_field }}
+            {{ form.combination|as_crispy_field }}
+            <div class="row">
+                <div class="col-md-8">{{ form.target_school|as_crispy_field }}</div>
+                <div class="col-md-4">{{ form.target_score|as_crispy_field }}</div>
+            </div>
+
+            <button type="submit" class="jt-btn primary w-100 justify-content-center mt-2">Create my account</button>
+            <p class="small jt-mute text-center mt-3 mb-0">Already registered? <a href="{% url 'accounts:login' %}">Log in</a></p>
+        </form>
+    </div>
+</div>
+{% endblock %}

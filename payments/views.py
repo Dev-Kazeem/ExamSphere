@@ -116,6 +116,11 @@ def flutterwave_webhook(request):
         return HttpResponse(status=400)
 
     data = payload.get("data") or {}
+    if str(data.get("tx_ref", "")).startswith("jt-"):
+        from jamb_tutor.billing import handle_flutterwave_event
+        handle_flutterwave_event(data)
+        return JsonResponse({"status": "ok"})
+    
     sub = subscription_for_ref(data.get("tx_ref"))
     if sub and data.get("id"):
         # Don't trust the webhook body; confirm with Flutterwave by transaction id.

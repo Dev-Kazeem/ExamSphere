@@ -1,0 +1,17 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% block title %}Study topics{% endblock %}
+
+{% block jt_content %}
+<h1>Study topics</h1>
+<p class="jt-mute">Choose a subject to see its topics and how many practice questions each one has.</p>
+
+<div class="jt-box">
+    {% for s in subjects %}
+    <a href="{% url 'jamb_tutor:topic_detail' s.slug %}" class="jt-subject {% if s.in_combination %}mine{% endif %}">
+        <span class="ic"><i class="bi {{ s.icon }}"></i></span>
+        <span><b>{{ s.full_name }}</b>{% if s.in_combination %}<br><small class="jt-mute">In your combination</small>{% endif %}</span>
+        <span class="n">{{ s.q_count }}<br><small class="jt-mute">question{{ s.q_count|pluralize }}</small></span>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Upload a past-question document{% endblock %}
+
+{% block jt_content %}
+<a href="{% url 'jamb_tutor:manage_home' %}" class="small">&larr; Question bank</a>
+<h1 class="mt-1">Upload a past-question document</h1>
+<p class="jt-mute">Gemini reads the file and turns the questions into the same format as the CSV upload. You review and edit everything before it is saved.</p>
+
+{% if not ai_ready %}<div class="jt-box mb-3" style="border-color:var(--red);">Gemini isn't configured. Set <code>GEMINI_API_KEY</code> first.</div>{% endif %}
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <form method="post" enctype="multipart/form-data" class="jt-box">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="jt-btn primary" type="submit">Upload and extract</button>
+        </form>
+    </div>
+    <div class="col-lg-6">
+        <div class="jt-box">
+            <h2>Good to know</h2>
+            <ul class="small ps-3 mb-0">
+                <li><b>PDF and .docx</b> only, up to 4 MB. Old .doc files must be saved as .docx first.</li>
+                <li>Scanned PDFs work because Gemini reads the page images.</li>
+                <li>The file is processed a couple of pages at a time, so keep this page open until it finishes.</li>
+                <li><b>Check the answers.</b> If the document has no answer key, Gemini works the answer out itself and the question is flagged so you can verify it.</li>
+                <li>Questions that need a diagram are flagged and left unticked.</li>
+                <li>A question that runs across a page break may come out incomplete. It will be flagged for you to fix.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

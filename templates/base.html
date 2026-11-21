@@ -538,14 +538,19 @@
         <div class="collapse navbar-collapse" id="navMenu">
             <ul class="navbar-nav ms-auto align-items-lg-center">
                 {% if user.is_authenticated %}
-                    {% if user.is_teacher %}
-                        <li class="nav-item"><a class="nav-link navtext" href="{% url 'exams:teacher_dashboard' %}">My Exams</a></li>
-                        <li class="nav-item"><a class="nav-link navtext" href="{% url 'exams:exam_create' %}">Create Exam</a></li>
+                    {% if user.jamb_profile %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'jamb_tutor:dashboard' %}">JAMB Tutor</a></li>
+                    {% elif user.is_teacher %}
+                          <li class="nav-item"><a class="nav-link navtext" href="{% url 'exams:teacher_dashboard' %}">My Exams</a></li>
+                          <li class="nav-item"><a class="nav-link navtext" href="{% url 'exams:exam_create' %}">Create Exam</a></li>
                     {% else %}
                         <li class="nav-item"><a class="nav-link navtext" href="{% url 'contact' %}">Contact Us</a></li>
                         <li class="nav-item"><a class="nav-link navtext" href="{% url 'exams:student_dashboard' %}">Available Exams</a></li>
                         <li class="nav-item"><a class="nav-link navtext" href="{% url 'exams:my_results' %}">My Results</a></li>
                         <li class="nav-item"><a class="nav-link navtext" href="{% url 'payments:checkout' %}">Make Payment </a></li>
+                    {% endif %}
+                    {% if user.is_staff %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'jamb_tutor:manage_home' %}">JAMB question bank</a></li>
                     {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">

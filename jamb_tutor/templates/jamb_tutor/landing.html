@@ -1,0 +1,33 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% block title %}JAMB Tutor{% endblock %}
+
+{% block jt_content %}
+<div class="row align-items-center g-4 py-3">
+    <div class="col-lg-7">
+        <h1>Practise JAMB the way it is tested.</h1>
+        <p class="lead mt-3" style="max-width: 34rem;">
+            Timed mock exams scored out of 400, an AI teacher who explains in Pidgin, English or Hausa,
+            and all of it on WhatsApp too.
+        </p>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+            <a href="{% url 'jamb_tutor:signup' %}" class="jt-btn primary">Sign up as a JAMB student</a>
+            <a href="{% url 'accounts:login' %}" class="jt-btn">Log in</a>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="jt-hero mb-0">
+            <div class="jt-mute small">Your target</div>
+            <div class="jt-display" style="font-size: 2.2rem; font-weight: 800;">280 / 400</div>
+            <div class="jt-ruler"><div class="jt-ruler-fill" style="width: 58%;"></div><div class="jt-flag flip" style="left: 70%;"><span>Target 280</span></div>
+                <div class="jt-ruler-ticks"><span>0</span><span>100</span><span>200</span><span>300</span><span>400</span></div></div>
+        </div>
+    </div>
+</div>
+
+<hr class="jt-rule my-4">
+<div class="row g-4">
+    <div class="col-md-4"><h2>1. Take a mock</h2><p class="jt-mute">20 random questions in 30 minutes. See your score, whether you are on target, and the reason behind every answer.</p></div>
+    <div class="col-md-4"><h2>2. Ask your teacher</h2><p class="jt-mute">Type any question the way you speak. You get simple steps, an example, and one question to try.</p></div>
+    <div class="col-md-4"><h2>3. Keep it going</h2><p class="jt-mute">Study by topic, build a streak, climb the leaderboard, and chat with the same teacher on WhatsApp.</p></div>
+</div>
+{% endblock %}

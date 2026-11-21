@@ -129,8 +129,8 @@ def resend_verification(request):
 @login_required
 def dashboard_redirect(request):
     """Send the logged-in user to the correct dashboard for their role."""
-    if hasattr(request.user, 'jambprofile'):
-        return redirect('jamb_dashboard')
+    if hasattr(request.user, 'jamb_profile'):
+        return redirect('jamb_tutor:dashboard')
     if request.user.is_teacher:
         return redirect('exams:teacher_dashboard')
     return redirect('exams:student_dashboard')

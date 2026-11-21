@@ -1,0 +1,53 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Upload questions (CSV){% endblock %}
+
+{% block jt_content %}
+<a href="{% url 'jamb_tutor:manage_home' %}" class="small">&larr; Question bank</a>
+<h1 class="mt-1">Upload questions (CSV)</h1>
+
+{% if result %}
+<div class="jt-box flat mb-3">
+    <h2 class="mb-2">Upload finished</h2>
+    <div class="row g-3">
+        <div class="col-4"><div class="jt-stat"><b>{{ result.added }}</b><small>added</small></div></div>
+        <div class="col-4"><div class="jt-stat"><b>{{ result.duplicates }}</b><small>duplicates skipped</small></div></div>
+        <div class="col-4"><div class="jt-stat"><b style="color:var(--red);">{{ result.invalid }}</b><small>rows with problems</small></div></div>
+    </div>
+</div>
+{% if result.problems %}
+<div class="jt-box mb-4">
+    <h2>Rows that were not added</h2>
+    <table class="jt-table"><thead><tr><th>Row</th><th>Problem</th></tr></thead>
+    {% for number, message in result.problems %}<tr><td>{{ number }}</td><td>{{ message }}</td></tr>{% endfor %}
+    </table>
+    {% if result.more_problems %}<p class="small jt-mute mt-2">&hellip; and {{ result.more_problems }} more.</p>{% endif %}
+    <p class="small jt-mute mt-2 mb-0">Row numbers match your spreadsheet (row 1 is the header).</p>
+</div>
+{% endif %}
+{% endif %}
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <form method="post" enctype="multipart/form-data" class="jt-box">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="jt-btn primary" type="submit">Upload and add questions</button>
+        </form>
+    </div>
+    <div class="col-lg-6">
+        <div class="jt-box">
+            <h2>Expected columns</h2>
+            <p><code>{{ columns|join:", " }}</code></p>
+            <ul class="small jt-mute ps-3">
+                <li>Required: subject, question_text, option_a to option_d, correct_option.</li>
+                <li>subject accepts names like Maths, Mathematics, Physics, Govt, IRS, CRS.</li>
+                <li>correct_option is A, B, C or D.</li>
+                <li>topic, explanation and year are optional.</li>
+                <li>Two questions count as duplicates when the subject and the question text match, ignoring capitals and punctuation.</li>
+            </ul>
+            <a class="jt-btn sm" href="{% url 'jamb_tutor:manage_csv_sample' %}"><i class="bi bi-download"></i> Download sample CSV</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

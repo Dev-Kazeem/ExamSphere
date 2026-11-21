@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block extra_head %}{% include "jamb_tutor/_styles.html" %}{% block jt_head %}{% endblock %}{% endblock %}
+
+{% block content %}
+<div class="jt">
+    {% if user.is_authenticated and user.jamb_profile %}
+    {% with page=request.resolver_match.url_name %}
+    <nav class="jt-subnav" aria-label="JAMB Tutor">
+        <a href="{% url 'jamb_tutor:dashboard' %}" class="{% if page == 'dashboard' %}active{% endif %}">Dashboard</a>
+        <a href="{% url 'jamb_tutor:mock_start' %}" class="{% if page == 'mock_start' or page == 'mock_take' or page == 'mock_result' or page == 'mock_review' or page == 'mock_history' %}active{% endif %}">Mock exam</a>
+        <a href="{% url 'jamb_tutor:teacher_chat' %}" class="{% if page == 'teacher_chat' %}active{% endif %}">AI Teacher</a>
+        <a href="{% url 'jamb_tutor:topics' %}" class="{% if page == 'topics' or page == 'topic_detail' %}active{% endif %}">Study topics</a>
+        <a href="{% url 'jamb_tutor:leaderboard' %}" class="{% if page == 'leaderboard' %}active{% endif %}">Leaderboard</a>
+    </nav>
+    {% endwith %}
+    {% endif %}
+    {% block jt_content %}{% endblock %}
+</div>
+{% endblock %}

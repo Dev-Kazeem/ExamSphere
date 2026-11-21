@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     'api',
     'core',
     'payments',
-    #'jamb_tutor',
+    'jamb_tutor',
 ]
 
 

@@ -1,0 +1,145 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% block title %}Ask AI Teacher{% endblock %}
+
+{% block jt_content %}
+<div class="jt-chat">
+    <div class="jt-chat-head">
+        <div class="av"><i class="bi bi-mortarboard-fill"></i></div>
+        <div class="lh-sm"><b>Your JAMB Teacher</b><br><small>Replies in {{ profile.get_preferred_language_display }}</small></div>
+    </div>
+
+    <div class="jt-thread" id="thread" aria-live="polite">
+        {% if has_more %}<button type="button" id="load-more" class="jt-btn sm align-self-center">Load earlier messages</button>{% endif %}
+
+        {% for m in chat_messages %}
+        <div class="jt-bubble {% if m.role == 'user' %}me{% else %}them{% endif %}" data-id="{{ m.id }}">
+            {{ m.content }}
+            <div class="meta">{% if m.channel == 'whatsapp' %}<i class="bi bi-whatsapp" title="Sent on WhatsApp"></i>{% endif %}<time datetime="{{ m.created_at|date:'c' }}"></time></div>
+        </div>
+        {% endfor %}
+
+        {% if not chat_messages %}
+        <div class="jt-bubble them" id="intro">
+            Hello {{ user.first_name|default:user.username }}! Ask me anything about your JAMB subjects. I'll explain in simple steps, give an example, and leave you one question to try.
+        </div>
+        {% endif %}
+    </div>
+
+    <form class="jt-compose" id="composer" autocomplete="off"
+          data-send-url="{% url 'jamb_tutor:teacher_send' %}" data-history-url="{% url 'jamb_tutor:teacher_history' %}">
+        {% csrf_token %}
+        <textarea id="msg" rows="1" maxlength="1500" placeholder="Type your question in Pidgin, English or Hausa" aria-label="Your question"></textarea>
+        <button type="submit" class="jt-send" id="send" aria-label="Send"><i class="bi bi-send-fill"></i></button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+    const thread = document.getElementById('thread');
+    const form = document.getElementById('composer');
+    const input = document.getElementById('msg');
+    const sendBtn = document.getElementById('send');
+    const token = form.querySelector('[name=csrfmiddlewaretoken]').value;
+    let busy = false;
+
+    function stamp(root) {
+        root.querySelectorAll('time[datetime]:empty').forEach(function (t) {
+            const d = new Date(t.getAttribute('datetime'));
+            if (isNaN(d)) return;
+            t.textContent = d.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+            t.title = d.toLocaleString();
+        });
+    }
+
+    function bubble(role, text, iso, channel, id, extraClass) {
+        const el = document.createElement('div');
+        el.className = 'jt-bubble ' + (role === 'user' ? 'me' : 'them') + (extraClass ? ' ' + extraClass : '');
+        if (id) el.dataset.id = id;
+        el.appendChild(document.createTextNode(text));          // text only: never HTML
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        if (channel === 'whatsapp') {
+            const i = document.createElement('i');
+            i.className = 'bi bi-whatsapp'; i.title = 'Sent on WhatsApp';
+            meta.appendChild(i);
+        }
+        const t = document.createElement('time');
+        t.setAttribute('datetime', iso || new Date().toISOString());
+        meta.appendChild(t);
+        el.appendChild(meta);
+        return el;
+    }
+
+    function toBottom() { thread.scrollTop = thread.scrollHeight; }
+    stamp(thread);
+    toBottom();
+
+    // ---- scroll back through history ----
+    const more = document.getElementById('load-more');
+    if (more) more.addEventListener('click', async function () {
+        const first = thread.querySelector('[data-id]');
+        if (!first) return;
+        more.disabled = true;
+        try {
+            const res = await fetch(form.dataset.historyUrl + '?before=' + first.dataset.id, {credentials: 'same-origin'});
+            const data = await res.json();
+            const prevHeight = thread.scrollHeight;
+            data.messages.slice().reverse().forEach(function (m) {
+                thread.insertBefore(bubble(m.role, m.content, m.created_at, m.channel, m.id), more.nextSibling);
+            });
+            stamp(thread);
+            thread.scrollTop = thread.scrollHeight - prevHeight;
+            if (!data.has_more) more.remove(); else more.disabled = false;
+        } catch (e) { more.disabled = false; }
+    });
+
+    // ---- send ----
+    input.addEventListener('input', function () {
+        input.style.height = 'auto';
+        input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+    });
+    input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
+    });
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text || busy) return;
+        busy = true; sendBtn.disabled = true;
+        const intro = document.getElementById('intro'); if (intro) intro.remove();
+
+        thread.appendChild(bubble('user', text, null, 'web'));
+        input.value = ''; input.style.height = 'auto';
+
+        const typing = document.createElement('div');
+        typing.className = 'jt-bubble them jt-typing';
+        typing.innerHTML = '<span></span><span></span><span></span>';
+        thread.appendChild(typing);
+        stamp(thread); toBottom();
+
+        try {
+            const res = await fetch(form.dataset.sendUrl, {
+                method: 'POST', credentials: 'same-origin',
+                headers: {'Content-Type': 'application/json', 'X-CSRFToken': token},
+                body: JSON.stringify({message: text}),
+            });
+            let data = {};
+            try { data = await res.json(); } catch (_) {}
+            typing.remove();
+            if (res.status === 402 && data.redirect) { window.location = data.redirect; return; }
+            const failed = !res.ok || data.fallback;
+            thread.appendChild(bubble('assistant', data.reply || data.error || 'Something went wrong. Please try again.',
+                                      data.created_at, 'web', data.id, failed ? 'err' : ''));
+        } catch (err) {
+            typing.remove();
+            thread.appendChild(bubble('assistant', 'No connection. Check your network and try again.', null, 'web', null, 'err'));
+        }
+        stamp(thread); toBottom();
+        busy = false; sendBtn.disabled = false; input.focus();
+    });
+})();
+</script>
+{% endblock %}

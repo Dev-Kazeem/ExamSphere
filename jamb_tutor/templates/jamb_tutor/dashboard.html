@@ -1,0 +1,76 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% block title %}JAMB Dashboard{% endblock %}
+
+{% block jt_content %}
+<div class="jt-hero">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+        <div>
+            <h1>{{ greeting }}</h1>
+            <p class="mb-0 jt-mute">Aiming for <b>{{ profile.target_school }}</b> with <b>{{ target }}</b> out of 400</p>
+        </div>
+        <span class="jt-streak"><i class="bi bi-fire"></i>
+            {% if streak %}{{ streak }}-day streak{% else %}Study today to start a streak{% endif %}
+        </span>
+    </div>
+
+    <div class="jt-ruler" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ progress }}" aria-label="Progress toward your target score">
+        <div class="jt-ruler-fill" style="width: {{ fill_pct }}%;"></div>
+        <div class="jt-flag {% if target_pct > 80 %}flip{% endif %}" style="left: {{ target_pct }}%;"><span>Target {{ target }}</span></div>
+        <div class="jt-ruler-ticks"><span>0</span><span>100</span><span>200</span><span>300</span><span>400</span></div>
+    </div>
+    <p class="mb-0">
+        {% if attempts %}
+            Your mocks average about <b>{{ avg_projected }}</b> out of 400. That is <b>{{ progress }}%</b> of the way to your target.
+        {% else %}
+            Take your first mock to see where you stand against your target.
+        {% endif %}
+    </p>
+</div>
+
+{% if not has_access %}
+<div class="jt-box flat d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <span><b>Mock exams and your AI Teacher need a subscription.</b> Study topics and the leaderboard are free.</span>
+    <a href="{% url 'jamb_tutor:subscribe' %}" class="jt-btn hi sm">See plans</a>
+</div>
+{% endif %}
+
+<div class="jt-tiles mb-4">
+    <a class="jt-tile main" href="{% url 'jamb_tutor:mock_start' %}">
+        <i class="bi bi-stopwatch"></i>
+        <span><b>Take a mock exam</b>{% if not has_access %}<br><span class="lock"><i class="bi bi-lock-fill"></i> Subscribe to unlock</span>{% endif %}</span>
+    </a>
+    <a class="jt-tile" href="{% url 'jamb_tutor:teacher_chat' %}">
+        <i class="bi bi-chat-dots"></i>
+        <span><b>Ask AI Teacher</b>{% if not has_access %}<br><span class="lock"><i class="bi bi-lock-fill"></i> Subscribe</span>{% endif %}</span>
+    </a>
+    <a class="jt-tile" href="{% url 'jamb_tutor:topics' %}"><i class="bi bi-journal-bookmark"></i><b>Study topics</b></a>
+    <a class="jt-tile" href="{% url 'jamb_tutor:leaderboard' %}"><i class="bi bi-trophy"></i><b>Leaderboard</b></a>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-4"><div class="jt-stat"><b>{{ attempts }}</b><small>mock{{ attempts|pluralize }} taken</small></div></div>
+    <div class="col-4"><div class="jt-stat"><b>{{ answered }}</b><small>questions attempted</small></div></div>
+    <div class="col-4"><div class="jt-stat"><b>{{ avg_pct }}%</b><small>average score</small></div></div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-7">
+        <h2>Recent mocks</h2>
+        {% for a in recent %}
+        <a href="{% url 'jamb_tutor:mock_result' a.pk %}" class="jt-subject" style="text-decoration:none;">
+            <span class="ic"><i class="bi {{ a.subject.icon }}"></i></span>
+            <span><b>{{ a.subject.name }}</b><br><small class="jt-mute">{{ a.started_at|date:"M d, Y" }}</small></span>
+            <span class="n">{{ a.score }}/{{ a.total_questions }}<br><small class="jt-mute">{{ a.percentage }}%</small></span>
+        </a>
+        {% empty %}
+        <p class="jt-mute">Nothing yet. Your finished mocks will show up here.</p>
+        {% endfor %}
+        {% if recent %}<a href="{% url 'jamb_tutor:mock_history' %}" class="d-inline-block mt-2">See all attempts</a>{% endif %}
+    </div>
+    <div class="col-md-5">
+        <h2>Your subjects</h2>
+        <p class="jt-mute mb-2">English plus the {{ profile.get_combination_display|lower }} subjects.</p>
+        {% for name in combo_subjects %}<a href="{% url 'jamb_tutor:topics' %}" class="jt-chip mine" style="text-decoration:none;color:var(--ink);">{{ name }}</a>{% endfor %}
+    </div>
+</div>
+{% endblock %}

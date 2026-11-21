@@ -1,0 +1,34 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% block title %}Mock result{% endblock %}
+
+{% block jt_content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <p class="jt-mute mb-1">{{ attempt.subject.full_name }}{% if attempt.status == 'TIMED_OUT' %} &middot; time ran out{% endif %}</p>
+        <div class="jt-score">{{ attempt.score }}<span style="font-size:.4em;" class="jt-mute">/{{ attempt.total_questions }}</span></div>
+        <p class="lead mb-3">{{ attempt.percentage }}%</p>
+
+        <div class="jt-box {% if passed %}flat{% endif %} mb-3" style="{% if not passed %}border:2px solid var(--red);{% endif %}">
+            <h2 class="{% if passed %}jt-pass{% else %}jt-fail{% endif %} mb-1">
+                {% if passed %}Pass. You are on track.{% else %}Below target.{% endif %}
+            </h2>
+            <p class="mb-0">
+                This score is about <b>{{ attempt.projected_score }}</b> out of 400 in JAMB terms. Your target is <b>{{ target }}</b>.
+                {% if not passed %}Review the answers below, then try again.{% endif %}
+            </p>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-4"><div class="jt-stat"><b>{{ attempt.score }}</b><small>correct</small></div></div>
+            <div class="col-4"><div class="jt-stat"><b>{{ wrong }}</b><small>wrong</small></div></div>
+            <div class="col-4"><div class="jt-stat"><b>{{ skipped }}</b><small>skipped</small></div></div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'jamb_tutor:mock_review' attempt.pk %}" class="jt-btn primary">Review answers</a>
+            <a href="{% url 'jamb_tutor:mock_start' %}" class="jt-btn">Take another mock</a>
+            <a href="{% url 'jamb_tutor:teacher_chat' %}" class="jt-btn">Ask the teacher</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

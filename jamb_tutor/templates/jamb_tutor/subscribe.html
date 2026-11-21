@@ -1,0 +1,40 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% block title %}Subscription{% endblock %}
+
+{% block jt_content %}
+<div class="row justify-content-center">
+<div class="col-lg-8">
+    <h1>Subscription</h1>
+    <p class="jt-mute">A subscription unlocks unlimited mock exams and your AI Teacher, in the app and on WhatsApp.</p>
+
+    {% if current %}
+    <div class="jt-box flat mb-3">
+        <b><i class="bi bi-check-circle-fill jt-pass"></i> Active: {{ current.plan.name }}</b><br>
+        Runs until {{ current.expires_at|date:"F j, Y" }}. You can renew early and the new time is added on the end.
+    </div>
+    {% endif %}
+    {% if not paywall_on %}
+    <div class="jt-box mb-3 small jt-mute">Subscriptions are switched off on this site (JAMB_REQUIRE_SUBSCRIPTION=False), so everything is open.</div>
+    {% endif %}
+
+    <div class="jt-box">
+        {% for plan in plans %}
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 py-3 {% if not forloop.last %}border-bottom{% endif %}">
+            <div>
+                <h2 class="mb-0">{{ plan.name }}</h2>
+                <span class="jt-mute">{{ plan.duration_days }} days{% if plan.description %} &middot; {{ plan.description }}{% endif %}</span>
+            </div>
+            <form method="post" action="{% url 'jamb_tutor:subscribe_pay' plan.pk %}" class="d-flex align-items-center gap-3">
+                {% csrf_token %}
+                <span class="jt-display" style="font-size:1.5rem;font-weight:800;">{{ plan.currency }} {{ plan.price|floatformat:"0g" }}</span>
+                <button type="submit" class="jt-btn primary">{% if current %}Renew{% else %}Subscribe{% endif %}</button>
+            </form>
+        </div>
+        {% empty %}
+        <p class="mb-0 jt-mute">No plans are available yet. Please check back soon.</p>
+        {% endfor %}
+    </div>
+    <p class="small jt-mute mt-3">Payments are processed securely by Flutterwave. If you were charged but are not unlocked, reload this page and we'll re-check your payment.</p>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% block title %}Review answers{% endblock %}
+
+{% block jt_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div><h1 class="mb-0">Review</h1><span class="jt-mute">{{ attempt.subject.full_name }} &middot; {{ attempt.score }}/{{ attempt.total_questions }}</span></div>
+    <a href="{% url 'jamb_tutor:mock_result' attempt.pk %}" class="jt-btn sm">Back to result</a>
+</div>
+
+{% for a in answers %}
+<div class="jt-box jt-q">
+    <div class="num">Question {{ forloop.counter }}
+        {% if a.is_correct %}<span class="jt-pass">&middot; Correct</span>
+        {% elif not a.selected_option %}<span class="jt-mute">&middot; Skipped</span>
+        {% else %}<span class="jt-fail">&middot; Wrong</span>{% endif %}
+    </div>
+    <p class="mt-1 mb-2" style="white-space: pre-line;">{{ a.question.question_text }}</p>
+    {% for letter, text in a.question.options %}
+    <div class="jt-opt {% if letter == a.question.correct_option %}right{% elif letter == a.selected_option %}wrong{% endif %}">
+        <span class="L">{{ letter }}</span>
+        <span>{{ text }}
+            {% if letter == a.question.correct_option %}<small class="jt-pass"> &check; correct answer</small>{% endif %}
+            {% if letter == a.selected_option and letter != a.question.correct_option %}<small class="jt-fail"> your answer</small>{% endif %}
+        </span>
+    </div>
+    {% endfor %}
+    {% if a.question.explanation %}<div class="jt-explain"><b>Why:</b> {{ a.question.explanation }}</div>{% endif %}
+</div>
+{% endfor %}
+{% endblock %}

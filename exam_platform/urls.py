@@ -24,10 +24,7 @@ urlpatterns = [
     path('contact', views.contact_view, name='contact'),
 
     # jamb tutor
-    #path('dashboard-redirect/', jamb_views.home_router, name='home_router'),
-    #path('jamb/', include('jamb_tutor.urls')),
-    #path('whatsapp/', include('jamb_tutor.whatsapp_urls')),
-
+    path('jamb/', include('jamb_tutor.urls')),
 ]
 
 # Custom error handlers

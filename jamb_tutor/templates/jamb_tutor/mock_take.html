@@ -1,0 +1,90 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% block title %}{{ attempt.subject.name }} mock{% endblock %}
+
+{% block jt_content %}
+<form method="post" id="exam" data-seconds="{{ seconds_remaining }}" data-autosave="{% url 'jamb_tutor:mock_autosave' attempt.pk %}" data-total="{{ attempt.total_questions }}">
+    {% csrf_token %}
+    <div class="jt-bar">
+        <div class="d-flex justify-content-between align-items-center gap-2">
+            <div class="small lh-sm"><b>{{ attempt.subject.full_name }}</b><br><span id="answered">0</span>/{{ attempt.total_questions }} answered</div>
+            <div class="time" id="timer">--:--</div>
+            <button type="submit" class="jt-btn hi sm">Submit</button>
+        </div>
+        <div class="jt-dots">
+            {% for a in answers %}<a href="#q{{ forloop.counter }}" class="jt-dot {% if a.selected_option %}done{% endif %}" data-qid="{{ a.question_id }}">{{ forloop.counter }}</a>{% endfor %}
+        </div>
+    </div>
+
+    {% for a in answers %}
+    <div class="jt-box jt-q" id="q{{ forloop.counter }}">
+        <div class="num">Question {{ forloop.counter }} of {{ attempt.total_questions }}</div>
+        <p class="mt-1 mb-2" style="white-space: pre-line;">{{ a.question.question_text }}</p>
+        {% for letter, text in a.question.options %}
+        <label class="jt-opt">
+            <input type="radio" name="q{{ a.question_id }}" value="{{ letter }}" data-qid="{{ a.question_id }}" {% if a.selected_option == letter %}checked{% endif %}>
+            <span class="L">{{ letter }}</span><span>{{ text }}</span>
+        </label>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+    <div class="text-center my-4"><button type="submit" class="jt-btn primary">Submit mock</button></div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+    const form = document.getElementById('exam');
+    const timer = document.getElementById('timer');
+    const answeredEl = document.getElementById('answered');
+    const total = parseInt(form.dataset.total, 10);
+    const token = form.querySelector('[name=csrfmiddlewaretoken]').value;
+    const endAt = Date.now() + parseInt(form.dataset.seconds, 10) * 1000;
+    let submitting = false;
+
+    function countAnswered() {
+        const n = new Set([...form.querySelectorAll('input[type=radio]:checked')].map(i => i.dataset.qid)).size;
+        answeredEl.textContent = n;
+        return n;
+    }
+    countAnswered();
+
+    // Save each answer as soon as it is picked
+    form.addEventListener('change', function (e) {
+        if (!e.target.matches('input[type=radio]')) return;
+        const qid = e.target.dataset.qid;
+        const dot = form.querySelector('.jt-dot[data-qid="' + qid + '"]');
+        if (dot) dot.classList.add('done');
+        countAnswered();
+        fetch(form.dataset.autosave, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': token},
+            body: JSON.stringify({question_id: qid, option: e.target.value}),
+            keepalive: true,
+        }).catch(function () { /* the final submit still carries every answer */ });
+    });
+
+    function tick() {
+        const left = Math.max(0, Math.round((endAt - Date.now()) / 1000));
+        const m = String(Math.floor(left / 60)).padStart(2, '0');
+        const s = String(left % 60).padStart(2, '0');
+        timer.textContent = m + ':' + s;
+        timer.classList.toggle('low', left <= 300);
+        if (left <= 0 && !submitting) { submitting = true; form.submit(); return; }
+        setTimeout(tick, 500);
+    }
+    tick();
+
+    form.addEventListener('submit', function (e) {
+        if (submitting) return;
+        const left = total - countAnswered();
+        if (left > 0 && !confirm('You have ' + left + ' unanswered question' + (left === 1 ? '' : 's') + '. Submit anyway?')) {
+            e.preventDefault();
+            return;
+        }
+        submitting = true;
+    });
+})();
+</script>
+{% endblock %}

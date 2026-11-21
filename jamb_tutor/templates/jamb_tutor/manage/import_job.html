@@ -1,0 +1,151 @@
+{% extends "jamb_tutor/base_jamb.html" %}
+{% block title %}Document import{% endblock %}
+
+{% block jt_content %}
+<a href="{% url 'jamb_tutor:manage_home' %}" class="small">&larr; Question bank</a>
+<h1 class="mt-1 mb-1">{{ job.filename }}</h1>
+<p class="jt-mute">{{ job.get_status_display }}</p>
+
+{% if job.status == 'PROCESSING' %}
+<div class="jt-box" id="working">
+    <h2>Reading your document&hellip;</h2>
+    <div class="jt-progress my-3"><div id="bar" style="width: {% widthratio job.next_chunk job.total_chunks 100 %}%;"></div></div>
+    <p class="mb-1" id="status">Part <span id="done">{{ job.next_chunk }}</span> of {{ job.total_chunks }} done. Found <span id="found">{{ job.extracted|length }}</span> question(s) so far.</p>
+    <p class="small jt-mute mb-0">Keep this page open. It carries on from where it stopped if you reload.</p>
+    <div id="choice" class="mt-3" hidden>
+        <p class="mb-2" style="color:var(--red);" id="errmsg"></p>
+        <button type="button" class="jt-btn sm" id="retry">Try this part again</button>
+        <button type="button" class="jt-btn sm" id="skip">Skip this part</button>
+    </div>
+</div>
+
+{% elif job.status == 'READY' %}
+{% if job.errors %}<div class="jt-box mb-3" style="border-color:var(--red);"><b>Some parts couldn't be read:</b><ul class="mb-0">{% for e in job.errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+
+{% if drafts %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+        <b>{{ drafts|length }}</b> question{{ drafts|length|pluralize }} found.
+        {% if flagged %}<span style="color:var(--red);"><b>{{ flagged }}</b> need attention.</span>{% endif %}
+        {% if ai_guessed %}<span class="jt-badge">{{ ai_guessed }} answer{{ ai_guessed|pluralize }} chosen by AI</span>{% endif %}
+    </div>
+    <a class="jt-btn sm" href="{% url 'jamb_tutor:manage_import_csv' job.pk %}"><i class="bi bi-download"></i> Download as CSV</a>
+</div>
+
+<form method="post" action="{% url 'jamb_tutor:manage_import_save' job.pk %}">
+    {% csrf_token %}
+    <input type="hidden" name="total" value="{{ drafts|length }}">
+    {% for d in drafts %}{% with idx=forloop.counter0 %}
+    <div class="jt-draft {% if d.error %}flag{% endif %}">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <label style="margin:0;font-size:.95rem;color:var(--ink);"><input type="checkbox" name="include_{{ idx }}" {% if d.include %}checked{% endif %}> Include #{{ forloop.counter }}</label>
+            {% if d.answer_source == 'ai' %}<span class="jt-badge">Answer chosen by AI. Please verify</span>{% endif %}
+        </div>
+        {% if d.error %}<div class="small mt-1" style="color:var(--red);">{{ d.error }}</div>{% endif %}
+        <input type="hidden" name="answer_source_{{ idx }}" value="{{ d.answer_source }}">
+
+        <label>Question</label>
+        <textarea name="question_text_{{ idx }}" rows="3">{{ d.question_text }}</textarea>
+        <div class="row g-2">
+            <div class="col-md-6"><label>Option A</label><input type="text" name="option_a_{{ idx }}" value="{{ d.option_a }}"></div>
+            <div class="col-md-6"><label>Option B</label><input type="text" name="option_b_{{ idx }}" value="{{ d.option_b }}"></div>
+            <div class="col-md-6"><label>Option C</label><input type="text" name="option_c_{{ idx }}" value="{{ d.option_c }}"></div>
+            <div class="col-md-6"><label>Option D</label><input type="text" name="option_d_{{ idx }}" value="{{ d.option_d }}"></div>
+        </div>
+        <div class="row g-2">
+            <div class="col-6 col-md-3"><label>Subject</label>
+                <select name="subject_{{ idx }}"><option value="">Choose&hellip;</option>
+                    {% for n in subject_names %}<option value="{{ n }}" {% if d.subject == n %}selected{% endif %}>{{ n }}</option>{% endfor %}
+                </select></div>
+            <div class="col-6 col-md-3"><label>Topic</label><input type="text" name="topic_{{ idx }}" value="{{ d.topic }}"></div>
+            <div class="col-6 col-md-3"><label>Correct answer</label>
+                <select name="correct_option_{{ idx }}"><option value="">Choose&hellip;</option>
+                    <option value="A" {% if d.correct_option == 'A' %}selected{% endif %}>A</option>
+                    <option value="B" {% if d.correct_option == 'B' %}selected{% endif %}>B</option>
+                    <option value="C" {% if d.correct_option == 'C' %}selected{% endif %}>C</option>
+                    <option value="D" {% if d.correct_option == 'D' %}selected{% endif %}>D</option>
+                </select></div>
+            <div class="col-6 col-md-3"><label>Year</label><input type="text" name="year_{{ idx }}" value="{{ d.year }}"></div>
+        </div>
+        <label>Explanation</label>
+        <textarea name="explanation_{{ idx }}" rows="2">{{ d.explanation }}</textarea>
+    </div>
+    {% endwith %}{% endfor %}
+
+    <div class="position-sticky bottom-0 py-3" style="background:#fff;border-top:2px solid var(--ink);">
+        <button type="submit" class="jt-btn primary">Save ticked questions</button>
+        <span class="small jt-mute ms-2">Duplicates already in the bank are skipped automatically.</span>
+    </div>
+</form>
+{% else %}
+<div class="jt-box"><p class="mb-2">No questions were found in this document.</p><a href="{% url 'jamb_tutor:manage_document' %}" class="jt-btn sm">Try another file</a></div>
+{% endif %}
+
+{% else %}
+<div class="jt-box flat">
+    <h2>Saved</h2>
+    <p class="mb-0"><b>{{ job.result.added }}</b> question(s) added, <b>{{ job.result.duplicates }}</b> duplicate(s) skipped, <b>{{ job.result.unticked }}</b> left out.</p>
+</div>
+<p class="mt-3"><a class="jt-btn" href="{% url 'jamb_tutor:manage_document' %}">Upload another document</a></p>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+{% if job.status == 'PROCESSING' %}
+<script>
+(function () {
+    const url = "{% url 'jamb_tutor:manage_import_process' job.pk %}";
+    const token = "{{ csrf_token }}";
+    const bar = document.getElementById('bar');
+    const choice = document.getElementById('choice');
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    async function step(skip) {
+        const body = new URLSearchParams();
+        if (skip) body.set('skip', '1');
+        try {
+            const res = await fetch(url, {method: 'POST', headers: {'X-CSRFToken': token}, body: body, credentials: 'same-origin'});
+            let data = {};
+            try { data = await res.json(); } catch (_) {}
+            return {ok: res.ok, data: data};
+        } catch (e) {
+            return {ok: false, data: {error: 'network problem'} };
+        }
+    }
+    function show(data) {
+        document.getElementById('done').textContent = data.done;
+        document.getElementById('found').textContent = data.found;
+        bar.style.width = Math.round(data.done / Math.max(1, data.total) * 100) + '%';
+    }
+    function ask(message) {
+        document.getElementById('errmsg').textContent = message;
+        choice.hidden = false;
+        return new Promise(function (resolve) {
+            document.getElementById('retry').onclick = function () { choice.hidden = true; resolve('retry'); };
+            document.getElementById('skip').onclick = function () { choice.hidden = true; resolve('skip'); };
+        });
+    }
+
+    (async function run() {
+        let failures = 0;
+        while (true) {
+            const r = await step(false);
+            if (r.ok) {
+                failures = 0; show(r.data);
+                if (r.data.finished) { location.reload(); return; }
+                continue;
+            }
+            failures += 1;
+            if (failures < 3) { await sleep(1500); continue; }
+            const pick = await ask('This part failed: ' + (r.data.error || 'unknown error'));
+            failures = 0;
+            if (pick === 'skip') {
+                const s = await step(true);
+                if (s.ok) { show(s.data); if (s.data.finished) { location.reload(); return; } }
+            }
+        }
+    })();
+})();
+</script>
+{% endif %}
+{% endblock %}
