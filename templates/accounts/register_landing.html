@@ -17,20 +17,42 @@
                     </div>
                 </div>
             </div>
-            <a href="{% url 'jamb_tutor:signup' %}" class="btn btn-success w-100">Sign up as a JAMB student</a>
+           <div class="col-md-6 form-bottom-up">
+               <div class="card h-100 text-center shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <i class="bi bi-mortarboard display-4 text-success mb-3"></i>
+                        <h4>I'm a JAMB student</h4>
+                        <p class="text-muted flex-grow-1">Take Mock exams, view your scores, and track your progress, access examsphere Ai tutor.</p>
+                        <a href="{% url 'jamb_tutor:signup' %}" class="btn btn-success">Sign up as Jamb student</a>                    
+                   </div>
+               </div>
+            </div>  
+        </div>
+            <div class="row g-4 mt-3">
             <div class="col-md-6 form-bottom-up">
                 <div class="card h-100 text-center shadow-sm">
                     <div class="card-body d-flex flex-column">
-                        <i class="bi bi-person-workspace display-4 text-success mb-3"></i>
-                        <h4>I'm a Educator</h4>
+                        <i class="bi bi-person-workspace display-4 text-primary mb-3"></i>
+                        <h4>ExamSphere Educator</h4>
                         <p class="text-muted flex-grow-1">Create exams, manage questions, and review student results.</p>
-                        <a href="{% url 'accounts:register_teacher' %}" class="btn btn-success">Sign up as Educator</a>
+                        <a href="{% url 'accounts:register_teacher' %}" class="btn btn-primary">Sign up as Educator</a>
                     </div>
                 </div>
             </div>
+           <div class="col-md-6 form-bottom-up">
+               <div class="card h-100 text-center shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <i class="bi bi-person-workspace display-4 text-success mb-3"></i>
+                        <h4>Institution / Organization</h4>
+                        <p class="text-muted flex-grow-1">Create exams, manage questions, and review student results.</p>
+                        <a href="/" class="btn btn-success">Sign up as institution</a>                    
+                   </div>
+               </div>
+            </div>  
         </div>
-        <p class="text-center mt-5 text-light">Already have an account? <a class="anchor" href="{% url 'accounts:login' %}">Login</a></p>
+
+     </div>
     </div>
-</div>
+  <p class="text-center mt-5 text-light">Already have an account? <a class="anchor" href="{% url 'accounts:login' %}">Login</a></p>
 </div>
 {% endblock %}

@@ -13,7 +13,9 @@ requirements.txt: `google-genai`, `pypdf>=4.0`, `python-docx>=1.1`, `requests` (
 ```python
 INSTALLED_APPS = [ ..., 'jamb_tutor' ]
 ```
-Everything else is read from environment variables (see section 8), so no other settings edits are needed.
+Everything else is read from environment variables (see section 8), so no other settings edits are needed...        
+
+
 
 ## 3. exam_platform/urls.py
 ```python
