@@ -2,6 +2,7 @@
 {% block title %}{{ attempt.subject.name }} mock{% endblock %}
 
 {% block jt_content %}
+<div class="container space-top">
 <form method="post" id="exam" data-seconds="{{ seconds_remaining }}" data-autosave="{% url 'jamb_tutor:mock_autosave' attempt.pk %}" data-total="{{ attempt.total_questions }}">
     {% csrf_token %}
     <div class="jt-bar">
@@ -30,6 +31,7 @@
 
     <div class="text-center my-4"><button type="submit" class="jt-btn primary">Submit mock</button></div>
 </form>
+</div>
 {% endblock %}
 
 {% block extra_scripts %}

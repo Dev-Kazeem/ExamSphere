@@ -2,7 +2,8 @@
 {% block title %}Mock exam{% endblock %}
 
 {% block jt_content %}
-<h1>Mock exam</h1>
+<div class="container space-top">
+<h1 class="text-light">Mock exam</h1>
 <p class="jt-mute">{{ n_questions }} random questions, {{ minutes }} minutes. Pick a subject to begin. The timer starts as soon as the exam opens.</p>
 
 <form method="post" class="jt-box">
@@ -20,5 +21,6 @@
     </div>
     {% endfor %}
 </form>
-<p class="mt-3"><a href="{% url 'jamb_tutor:mock_history' %}">View your attempt history</a></p>
+<p class="mt-3"><a href="{% url 'jamb_tutor:mock_history' %}" class="btn btn-outline-primary">View your attempt history</a></p>
+</div>
 {% endblock %}

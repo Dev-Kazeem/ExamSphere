@@ -2,7 +2,8 @@
 {% block title %}Study topics{% endblock %}
 
 {% block jt_content %}
-<h1>Study topics</h1>
+<div class="container space-top">
+<h1 class="text-light">Study topics</h1>
 <p class="jt-mute">Choose a subject to see its topics and how many practice questions each one has.</p>
 
 <div class="jt-box">
@@ -13,5 +14,6 @@
         <span class="n">{{ s.q_count }}<br><small class="jt-mute">question{{ s.q_count|pluralize }}</small></span>
     </a>
     {% endfor %}
+</div>
 </div>
 {% endblock %}

@@ -3,8 +3,9 @@
 {% block title %}Upload questions (CSV){% endblock %}
 
 {% block jt_content %}
-<a href="{% url 'jamb_tutor:manage_home' %}" class="small">&larr; Question bank</a>
-<h1 class="mt-1">Upload questions (CSV)</h1>
+<div class="container space-top">
+<a href="{% url 'jamb_tutor:manage_home' %}" class="small text-light btn btn-outline-primary">&larr; Question bank</a>
+<h1 class="m-3 text-light">Upload questions (CSV)</h1>
 
 {% if result %}
 <div class="jt-box flat mb-3">
@@ -49,5 +50,6 @@
             <a class="jt-btn sm" href="{% url 'jamb_tutor:manage_csv_sample' %}"><i class="bi bi-download"></i> Download sample CSV</a>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

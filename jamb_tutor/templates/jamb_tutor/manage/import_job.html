@@ -2,8 +2,9 @@
 {% block title %}Document import{% endblock %}
 
 {% block jt_content %}
-<a href="{% url 'jamb_tutor:manage_home' %}" class="small">&larr; Question bank</a>
-<h1 class="mt-1 mb-1">{{ job.filename }}</h1>
+<div class="container space-top">
+<a href="{% url 'jamb_tutor:manage_home' %}" class="small btn btn-outline-primary">&larr; Question bank</a>
+<h1 class="mt-1 mb-1 text-light">{{ job.filename }}</h1>
 <p class="jt-mute">{{ job.get_status_display }}</p>
 
 {% if job.status == 'PROCESSING' %}
@@ -87,6 +88,7 @@
     <p class="mb-0"><b>{{ job.result.added }}</b> question(s) added, <b>{{ job.result.duplicates }}</b> duplicate(s) skipped, <b>{{ job.result.unticked }}</b> left out.</p>
 </div>
 <p class="mt-3"><a class="jt-btn" href="{% url 'jamb_tutor:manage_document' %}">Upload another document</a></p>
+</div>
 {% endif %}
 {% endblock %}
 

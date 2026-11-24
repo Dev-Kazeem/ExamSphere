@@ -2,7 +2,8 @@
 {% block title %}Attempt history{% endblock %}
 
 {% block jt_content %}
-<h1>Attempt history</h1>
+<div class="space-top">
+<h1 class="text-light">Attempt history</h1>
 <p class="jt-mute">Your last 50 finished mocks. Target: {{ target }}/400.</p>
 
 {% if attempts %}
@@ -25,5 +26,6 @@
 </div>
 {% else %}
 <div class="jt-box"><p class="mb-2">No finished mocks yet.</p><a class="jt-btn primary sm" href="{% url 'jamb_tutor:mock_start' %}">Take your first mock</a></div>
+</div>
 {% endif %}
 {% endblock %}

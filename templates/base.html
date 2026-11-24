@@ -539,6 +539,8 @@
             <ul class="navbar-nav ms-auto align-items-lg-center">
                 {% if user.is_authenticated %}
                     {% if user.jamb_profile %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'jamb_tutor:subscribe' %}">Subscribe</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact Us</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'jamb_tutor:dashboard' %}">JAMB Tutor</a></li>
                     {% elif user.is_teacher %}
                           <li class="nav-item"><a class="nav-link navtext" href="{% url 'exams:teacher_dashboard' %}">My Exams</a></li>

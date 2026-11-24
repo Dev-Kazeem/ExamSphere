@@ -2,6 +2,7 @@
 {% block title %}Review answers{% endblock %}
 
 {% block jt_content %}
+<div class="container space-top">
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
     <div><h1 class="mb-0">Review</h1><span class="jt-mute">{{ attempt.subject.full_name }} &middot; {{ attempt.score }}/{{ attempt.total_questions }}</span></div>
     <a href="{% url 'jamb_tutor:mock_result' attempt.pk %}" class="jt-btn sm">Back to result</a>
@@ -27,4 +28,5 @@
     {% if a.question.explanation %}<div class="jt-explain"><b>Why:</b> {{ a.question.explanation }}</div>{% endif %}
 </div>
 {% endfor %}
+</div>
 {% endblock %}

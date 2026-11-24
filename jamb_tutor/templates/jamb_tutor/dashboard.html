@@ -2,6 +2,7 @@
 {% block title %}JAMB Dashboard{% endblock %}
 
 {% block jt_content %}
+<div class="container space-top">
 <div class="jt-hero">
     <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
         <div>
@@ -48,14 +49,14 @@
 </div>
 
 <div class="row g-4 mb-4">
-    <div class="col-4"><div class="jt-stat"><b>{{ attempts }}</b><small>mock{{ attempts|pluralize }} taken</small></div></div>
-    <div class="col-4"><div class="jt-stat"><b>{{ answered }}</b><small>questions attempted</small></div></div>
-    <div class="col-4"><div class="jt-stat"><b>{{ avg_pct }}%</b><small>average score</small></div></div>
+    <div class="col-4"><div class="jt-stat text-secondary"><b>{{ attempts }}</b><small>mock{{ attempts|pluralize }} taken</small></div></div>
+    <div class="col-4"><div class="jt-stat text-secondary"><b>{{ answered }}</b><small>questions attempted</small></div></div>
+    <div class="col-4"><div class="jt-stat text-secondary"><b>{{ avg_pct }}%</b><small>average score</small></div></div>
 </div>
 
 <div class="row g-4">
     <div class="col-md-7">
-        <h2>Recent mocks</h2>
+        <h2 class="text-light">Recent mocks</h2>
         {% for a in recent %}
         <a href="{% url 'jamb_tutor:mock_result' a.pk %}" class="jt-subject" style="text-decoration:none;">
             <span class="ic"><i class="bi {{ a.subject.icon }}"></i></span>
@@ -68,9 +69,10 @@
         {% if recent %}<a href="{% url 'jamb_tutor:mock_history' %}" class="d-inline-block mt-2">See all attempts</a>{% endif %}
     </div>
     <div class="col-md-5">
-        <h2>Your subjects</h2>
+        <h2 class="text-light">Your subjects</h2>
         <p class="jt-mute mb-2">English plus the {{ profile.get_combination_display|lower }} subjects.</p>
         {% for name in combo_subjects %}<a href="{% url 'jamb_tutor:topics' %}" class="jt-chip mine" style="text-decoration:none;color:var(--ink);">{{ name }}</a>{% endfor %}
     </div>
+</div>
 </div>
 {% endblock %}

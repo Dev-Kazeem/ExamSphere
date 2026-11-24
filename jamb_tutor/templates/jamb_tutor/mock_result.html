@@ -2,6 +2,7 @@
 {% block title %}Mock result{% endblock %}
 
 {% block jt_content %}
+<div class="container space-top">
 <div class="row justify-content-center">
     <div class="col-lg-7">
         <p class="jt-mute mb-1">{{ attempt.subject.full_name }}{% if attempt.status == 'TIMED_OUT' %} &middot; time ran out{% endif %}</p>
@@ -30,5 +31,6 @@
             <a href="{% url 'jamb_tutor:teacher_chat' %}" class="jt-btn">Ask the teacher</a>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

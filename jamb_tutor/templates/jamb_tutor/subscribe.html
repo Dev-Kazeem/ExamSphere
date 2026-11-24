@@ -2,9 +2,10 @@
 {% block title %}Subscription{% endblock %}
 
 {% block jt_content %}
+<div class="container space-top">
 <div class="row justify-content-center">
 <div class="col-lg-8">
-    <h1>Subscription</h1>
+    <h1 class="text-light">Subscription</h1>
     <p class="jt-mute">A subscription unlocks unlimited mock exams and your AI Teacher, in the app and on WhatsApp.</p>
 
     {% if current %}
@@ -35,6 +36,7 @@
         {% endfor %}
     </div>
     <p class="small jt-mute mt-3">Payments are processed securely by Flutterwave. If you were charged but are not unlocked, reload this page and we'll re-check your payment.</p>
+</div>
 </div>
 </div>
 {% endblock %}

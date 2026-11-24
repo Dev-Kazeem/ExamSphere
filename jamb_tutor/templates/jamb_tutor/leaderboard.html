@@ -2,7 +2,8 @@
 {% block title %}Leaderboard{% endblock %}
 
 {% block jt_content %}
-<h1>Leaderboard</h1>
+<div class="container space-top">
+<h1 class="text-light">Leaderboard</h1>
 <p class="jt-mute">Top 10 students by average mock score.</p>
 
 {% if rows %}
@@ -25,5 +26,6 @@
 {% else %}
 <div class="jt-box"><p class="mb-2">Nobody is on the board yet. Finish a mock exam to be the first.</p>
 <a class="jt-btn primary sm" href="{% url 'jamb_tutor:mock_start' %}">Take a mock</a></div>
+</div>
 {% endif %}
 {% endblock %}
