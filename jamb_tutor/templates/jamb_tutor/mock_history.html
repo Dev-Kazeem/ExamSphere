@@ -3,20 +3,20 @@
 
 {% block jt_content %}
 <div class="space-top">
-<h1 class="text-light">Attempt history</h1>
+<h3 class="text-light">Attempt history</h3>
 <p class="jt-mute">Your last 50 finished mocks. Target: {{ target }}/400.</p>
 
 {% if attempts %}
 <div class="table-responsive">
 <table class="jt-table">
-    <thead><tr><th>Date</th><th>Subject</th><th>Score</th><th>JAMB equiv.</th><th>Result</th><th></th></tr></thead>
+    <thead><tr><th class="text-light">Date</th><th class="text-light">Subject</th><th class="text-light">Score</th><th class="text-light">JAMB equiv.</th><th class="text-light">Result</th><th></th></tr></thead>
     <tbody>
     {% for a in attempts %}
     <tr>
-        <td>{{ a.started_at|date:"M d, Y" }}<br><small class="jt-mute">{% if a.source == 'WHATSAPP' %}WhatsApp{% else %}App{% endif %}</small></td>
-        <td><b>{{ a.subject.name }}</b></td>
+        <td class="jt-mute">{{ a.started_at|date:"M d, Y" }}<br><small class="jt-mute">{% if a.source == 'WHATSAPP' %}WhatsApp{% else %}App{% endif %}</small></td>
+        <td class="jt-mute"><b>{{ a.subject.name }}</b></td>
         <td>{{ a.score }}/{{ a.total_questions }} <small class="jt-mute">({{ a.percentage }}%)</small></td>
-        <td>{{ a.projected_score }}/400</td>
+        <td class="jt-mute">{{ a.projected_score }}/400</td>
         <td>{% if a.projected_score >= target %}<span class="jt-pass">Pass</span>{% else %}<span class="jt-fail">Below target</span>{% endif %}</td>
         <td><a href="{% url 'jamb_tutor:mock_review' a.pk %}">Review</a></td>
     </tr>

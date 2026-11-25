@@ -2,12 +2,12 @@
 {% block title %}Mock result{% endblock %}
 
 {% block jt_content %}
-<div class="container space-top">
+<div class=" space-top">
 <div class="row justify-content-center">
     <div class="col-lg-7">
-        <p class="jt-mute mb-1">{{ attempt.subject.full_name }}{% if attempt.status == 'TIMED_OUT' %} &middot; time ran out{% endif %}</p>
-        <div class="jt-score">{{ attempt.score }}<span style="font-size:.4em;" class="jt-mute">/{{ attempt.total_questions }}</span></div>
-        <p class="lead mb-3">{{ attempt.percentage }}%</p>
+        <h3 class=" mb-1 text-light">{{ attempt.subject.full_name }}{% if attempt.status == 'TIMED_OUT' %} &middot; time ran out{% endif %}</h3>
+        <div class="jt-score text-secondary">{{ attempt.score }}<span style="font-size:.4em;" class="jt-mute">/{{ attempt.total_questions }}</span></div>
+        <p class="text-secondary mb-3">{{ attempt.percentage }}%</p>
 
         <div class="jt-box {% if passed %}flat{% endif %} mb-3" style="{% if not passed %}border:2px solid var(--red);{% endif %}">
             <h2 class="{% if passed %}jt-pass{% else %}jt-fail{% endif %} mb-1">
@@ -20,9 +20,9 @@
         </div>
 
         <div class="row g-3 mb-4">
-            <div class="col-4"><div class="jt-stat"><b>{{ attempt.score }}</b><small>correct</small></div></div>
-            <div class="col-4"><div class="jt-stat"><b>{{ wrong }}</b><small>wrong</small></div></div>
-            <div class="col-4"><div class="jt-stat"><b>{{ skipped }}</b><small>skipped</small></div></div>
+            <div class="col-4"><div class="jt-stat text-secondary"><b>{{ attempt.score }}</b><small>correct</small></div></div>
+            <div class="col-4"><div class="jt-stat text-secondary"><b>{{ wrong }}</b><small>wrong</small></div></div>
+            <div class="col-4"><div class="jt-stat text-secondary"><b>{{ skipped }}</b><small>skipped</small></div></div>
         </div>
 
         <div class="d-flex flex-wrap gap-2">

@@ -58,15 +58,15 @@
     <div class="col-md-7">
         <h2 class="text-light">Recent mocks</h2>
         {% for a in recent %}
-        <a href="{% url 'jamb_tutor:mock_result' a.pk %}" class="jt-subject" style="text-decoration:none;">
+        <a href="{% url 'jamb_tutor:mock_result' a.pk %}" class="jt-subject ps-2 pe-2 rounded" style="text-decoration:none;">
             <span class="ic"><i class="bi {{ a.subject.icon }}"></i></span>
-            <span><b>{{ a.subject.name }}</b><br><small class="jt-mute">{{ a.started_at|date:"M d, Y" }}</small></span>
-            <span class="n">{{ a.score }}/{{ a.total_questions }}<br><small class="jt-mute">{{ a.percentage }}%</small></span>
+            <span class="text-secondary"><b>{{ a.subject.name }}</b><br><small class="jt-mute">{{ a.started_at|date:"M d, Y" }}</small></span>
+            <span class="n text-secondary">{{ a.score }}/{{ a.total_questions }}<br><small class="jt-mute">{{ a.percentage }}%</small></span>
         </a>
         {% empty %}
         <p class="jt-mute">Nothing yet. Your finished mocks will show up here.</p>
         {% endfor %}
-        {% if recent %}<a href="{% url 'jamb_tutor:mock_history' %}" class="d-inline-block mt-2">See all attempts</a>{% endif %}
+        {% if recent %}<a href="{% url 'jamb_tutor:mock_history' %}" class="d-inline-block mt-2 btn btn-outline-primary">See all attempts</a>{% endif %}
     </div>
     <div class="col-md-5">
         <h2 class="text-light">Your subjects</h2>
