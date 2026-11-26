@@ -351,3 +351,21 @@ class ImportJob(models.Model):
 
     def __str__(self):
         return f"{self.filename} ({self.status})"
+
+
+# 404 = wrong/retired model name; 408/429/5xx = timeouts, quota or capacity.
+FALLBACK_STATUS = {404, 408, 429, 500, 502, 503, 504}
+
+
+def model_chain(primary, fallbacks):
+    """Primary model first, then each fallback, without repeats or blanks."""
+    chain = []
+    for name in [primary, *(fallbacks or [])]:
+        name = (name or '').strip()
+        if name and name not in chain:
+            chain.append(name)
+    return chain
+
+
+def should_try_next_model(status_code):
+    return status_code in FALLBACK_STATUS
