@@ -32,65 +32,37 @@ def extraction_model():
     return conf.get('GEMINI_EXTRACTION_MODEL') or chat_model()
 
 
-def fallback_models():
-    """Other models to try when the main one is overloaded. Comma-separated in GEMINI_FALLBACK_MODELS."""
-    raw = conf.get('GEMINI_FALLBACK_MODELS', DEFAULT_MODEL)
-    return [name.strip() for name in str(raw).split(',') if name.strip()]
-
-
 def _generate(model, make_contents, *, system=None, temperature=0.3, max_tokens=2048, json_mode=False):
     if not is_configured():
         raise AIUnavailable('GEMINI_API_KEY is not set.')
     try:
         from google import genai
         from google.genai import types
-    except ImportError as exc:
-        raise AIUnavailable("The google-genai package isn't installed.") from exc
 
-    timeout_ms = conf.get_int('GEMINI_TIMEOUT_SECONDS', 25) * 1000
-    try:
-        # One attempt per model: our own fallback is faster than the SDK's built-in retries.
-        http_options = types.HttpOptions(timeout=timeout_ms, retry_options=types.HttpRetryOptions(attempts=1))
-    except Exception:
-        http_options = types.HttpOptions(timeout=timeout_ms)       # older SDK without retry options
-
-    config = {'temperature': temperature, 'max_output_tokens': max_tokens}
-    if system:
-        config['system_instruction'] = system
-    if json_mode:
-        config['response_mime_type'] = 'application/json'
-
-    chain = logic.model_chain(model, fallback_models())
-    last_error = None
-    try:
-        client = genai.Client(api_key=conf.get('GEMINI_API_KEY'), http_options=http_options)
-    except Exception as exc:
-        logger.exception('Could not create the Gemini client')
+        client = genai.Client(
+            api_key=conf.get('GEMINI_API_KEY'),
+            http_options=types.HttpOptions(timeout=conf.get_int('GEMINI_TIMEOUT_SECONDS', 25) * 1000),
+        )
+        config = {'temperature': temperature, 'max_output_tokens': max_tokens}
+        if system:
+            config['system_instruction'] = system
+        if json_mode:
+            config['response_mime_type'] = 'application/json'
+        response = client.models.generate_content(
+            model=model,
+            contents=make_contents(types),
+            config=types.GenerateContentConfig(**config),
+        )
+        text = (response.text or '').strip()
+    except AIUnavailable:
+        raise
+    except Exception as exc:                      # network, quota, bad model name, blocked content...
+        logger.exception('Gemini request failed (model=%s)', model)
         raise AIUnavailable(str(exc)[:300]) from exc
+    if not text:
+        raise AIUnavailable('Gemini returned an empty reply.')
+    return text
 
-    for position, name in enumerate(chain):
-        try:
-            response = client.models.generate_content(
-                model=name, contents=make_contents(types), config=types.GenerateContentConfig(**config),
-            )
-            text = (response.text or '').strip()
-        except Exception as exc:
-            last_error = exc
-            code = getattr(exc, 'code', None)
-            more = position < len(chain) - 1
-            logger.warning('Gemini model %s failed (status %s)%s: %s', name, code,
-                           '; trying the next model' if more and logic.should_try_next_model(code) else '',
-                           str(exc)[:200])
-            if more and logic.should_try_next_model(code):
-                continue
-            break
-        if text:
-            if position:
-                logger.warning('Gemini answered using fallback model %s', name)
-            return text
-        last_error = AIUnavailable('Gemini returned an empty reply.')
-
-    raise AIUnavailable(str(last_error)[:300] if last_error else 'Gemini returned nothing.') from last_error
 
 # --------------------------------------------------------------------------
 # AI Teacher
